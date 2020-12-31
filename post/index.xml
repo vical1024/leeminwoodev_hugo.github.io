@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on My New Hugo Site</title>
-    <link>http://blog.leeminwoo.dev/post/</link>
+    <link>https://blog.leeminwoo.dev/post/</link>
     <description>Recent content in Posts on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 11 Oct 2020 12:44:00 +0900</lastBuildDate><atom:link href="http://blog.leeminwoo.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 11 Oct 2020 12:44:00 +0900</lastBuildDate><atom:link href="https://blog.leeminwoo.dev/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>First_post</title>
-      <link>http://blog.leeminwoo.dev/post/first_post/</link>
+      <link>https://blog.leeminwoo.dev/post/first_post/</link>
       <pubDate>Sun, 11 Oct 2020 12:44:00 +0900</pubDate>
       
-      <guid>http://blog.leeminwoo.dev/post/first_post/</guid>
+      <guid>https://blog.leeminwoo.dev/post/first_post/</guid>
       <description>예전부터 개인 도메인 위에 개인 블로그를 하나 운영하고 싶은 바램이 있었습니다. 물론 게으른 제 천성 때문에 실천에 옮기지 못했습니다. 그런데 최근 회사에서 경험하는 많은 어려움이 저에게 많은 시사점을 주었고 많은 생각 끝에 저는 제가 좀 더 적극적으로 노력해야 한다고 결론지었습니다. 게으름을 타파하고, 변화를 두려워하지 말고, 집중력 있게 연습과 실전을 계속 경험할 것. 흠, 초등학생의 &amp;lsquo;착한 사람이 되자&amp;rsquo;와 같은 애매모호하게 뜬구름 잡는 목표를 거창하게 말하는 것 같아 부끄럽네요. 제 경험과 생각의 흐름에 대해서는 다음에 자세히 이야기 할 기회를 두고 다시 한 번 정리해보죠.</description>
     </item>
     

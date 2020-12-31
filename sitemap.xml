@@ -3,26 +3,26 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://blog.leeminwoo.dev/post/first_post/</loc>
+    <loc>https://blog.leeminwoo.dev/post/first_post/</loc>
     <lastmod>2020-10-11T12:44:00+09:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.leeminwoo.dev/</loc>
+    <loc>https://blog.leeminwoo.dev/</loc>
     <lastmod>2020-10-11T12:44:00+09:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.leeminwoo.dev/post/</loc>
+    <loc>https://blog.leeminwoo.dev/post/</loc>
     <lastmod>2020-10-11T12:44:00+09:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.leeminwoo.dev/categories/</loc>
+    <loc>https://blog.leeminwoo.dev/categories/</loc>
   </url>
   
   <url>
-    <loc>http://blog.leeminwoo.dev/tags/</loc>
+    <loc>https://blog.leeminwoo.dev/tags/</loc>
   </url>
   
 </urlset>
