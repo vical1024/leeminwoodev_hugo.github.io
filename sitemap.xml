@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://blog.leeminwoo.dev/post/first_post/</loc>
-    <lastmod>2020-10-11T12:44:00+09:00</lastmod>
+    <loc>https://blog.leeminwoo.dev/post/growth_19th_jan_2021/</loc>
+    <lastmod>2021-01-19T11:37:48+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.leeminwoo.dev/</loc>
-    <lastmod>2020-10-11T12:44:00+09:00</lastmod>
+    <lastmod>2021-01-19T11:37:48+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.leeminwoo.dev/post/</loc>
+    <lastmod>2021-01-19T11:37:48+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.leeminwoo.dev/post/first_post/</loc>
     <lastmod>2020-10-11T12:44:00+09:00</lastmod>
   </url>
   
