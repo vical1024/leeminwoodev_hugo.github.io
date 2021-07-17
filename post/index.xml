@@ -6,7 +6,16 @@
     <description>Recent content in Posts on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 19 Jan 2021 11:37:48 +0900</lastBuildDate><atom:link href="https://blog.leeminwoo.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 23 Jan 2021 21:36:54 +0900</lastBuildDate><atom:link href="https://blog.leeminwoo.dev/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Yocto 공부</title>
+      <link>https://blog.leeminwoo.dev/post/yocto_1st/</link>
+      <pubDate>Sat, 23 Jan 2021 21:36:54 +0900</pubDate>
+      
+      <guid>https://blog.leeminwoo.dev/post/yocto_1st/</guid>
+      <description>일반적인 PC 환경에서는 기성 배포판을 커스터마이징하는 Top-Down방식으로 원하는 형태의 Linux를 얻을 수 있다. 개인이 운영하는 Linux는 물론 크고 작은 Enterprise 서버 환경에서 동작하는 Linux등은 모두 이러한 방식으로 생성되고 관리되고 있다. 하지만 여기에는 큰 제약이 따르는데 대부분의 배포판은 X86 하드웨어 타겟으로 이뤄져 있기 때문에 다양한 CPU 아키텍쳐에 걸쳐 일어나는 임베디드 개발 환경에 기민하게 대응하기 어렵다. 때문에 임베디드 Linux의 개발은 Bottom-Up으로 이뤄지는데 Bootloader, Kernel의 선택부터 필수적인 Package, User Application의 추가, 그리고 이를 Build, Install, Packaging하는 과정까지 사용자가 세세하게 관리하며 원하는 최적의 Customized Linux를 만들어 내게 된다.</description>
+    </item>
+    
     <item>
       <title>Growth</title>
       <link>https://blog.leeminwoo.dev/post/growth_19th_jan_2021/</link>

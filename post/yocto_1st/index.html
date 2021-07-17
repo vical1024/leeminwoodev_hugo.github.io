@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Minwoo Lee | Yocto 공부 </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.76.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Minwoo Lee(description)">
+    
+    <link rel="stylesheet"
+          href="https://blog.leeminwoo.dev/css/style.min.28b1ee64753ae7e3e46327acb742498816170bd217640dd4bf69240697a4d5e4.css"
+          integrity="sha256-KLHuZHU65&#43;PkYyest0JJiBYXC9IXZA3Uv2kkBpek1eQ="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="https://blog.leeminwoo.dev/css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="https://blog.leeminwoo.dev/favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://blog.leeminwoo.dev/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://blog.leeminwoo.dev/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://blog.leeminwoo.dev/favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="https://blog.leeminwoo.dev/post/yocto_1st/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="https://blog.leeminwoo.dev/js/anatole-header.min.e782db136ec18d105a4552702eac49f4620d6867da3fbf808bd53e806c96be6e.js"
+            integrity="sha256-54LbE27BjRBaRVJwLqxJ9GINaGfaP7&#43;Ai9U&#43;gGyWvm4="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://blog.leeminwoo.dev/images/site-feature-image.png"/>
+
+<meta name="twitter:title" content="Yocto 공부"/>
+<meta name="twitter:description" content="일반적인 PC 환경에서는 기성 배포판을 커스터마이징하는 Top-Down방식으로 원하는 형태의 Linux를 얻을 수 있다. 개인이 운영하는 Linux는 물론 크고 작은 Enterprise 서버 환경에서 동작하는 Linux등은 모두 이러한 방식으로 생성되고 관리되고 있다. 하지만 여기에는 큰 제약이 따르는데 대부분의 배포판은 X86 하드웨어 타겟으로 이뤄져 있기 때문에 다양한 CPU 아키텍쳐에 걸쳐 일어나는 임베디드 개발 환경에 기민하게 대응하기 어렵다. 때문에 임베디드 Linux의 개발은 Bottom-Up으로 이뤄지는데 Bootloader, Kernel의 선택부터 필수적인 Package, User Application의 추가, 그리고 이를 Build, Install, Packaging하는 과정까지 사용자가 세세하게 관리하며 원하는 최적의 Customized Linux를 만들어 내게 된다."/>
+
+</head>
+<body><div class="sidebar animated fadeInDown ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="https://blog.leeminwoo.dev/images/profile.jpg" alt="profile picture">
+            <h3 title=""><a href="/">Minwoo Lee</a></h3>
+            <div class="description">
+                <p>Minwoo Lee(description)</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/85minwoolee" rel="me" aria-label="Linkedin">
+                    <i class="fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/vical1024" rel="me" aria-label="GitHub">
+                    <i class="fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:vical1024@gmail.com" rel="me" aria-label="e-mail">
+                    <i class="fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Minwoo Lee 2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  animated fadeInDown ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="/"
+                        
+                   title="">Home</a></li>
+        
+            
+            <li><a 
+                   href="/post/"
+                        
+                   title="">Posts</a></li>
+        
+            
+            <li><a 
+                   href="/about/"
+                        
+                   title="">About</a></li>
+        
+        
+        <li class="theme-switch-item">
+            <a class="theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+    <div class="post  animated fadeInDown ">
+        <div class="post-content">
+            <div class="post-title">
+                <h3>Yocto 공부</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date">Sat, Jan 23, 2021</span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">2-minute read</span>
+                    </div>
+                
+            </div>
+
+            <p>일반적인 PC 환경에서는 기성 배포판을 커스터마이징하는 Top-Down방식으로 원하는 형태의 Linux를 얻을 수 있다. 개인이 운영하는 Linux는 물론 크고 작은 Enterprise 서버 환경에서 동작하는 Linux등은 모두 이러한 방식으로 생성되고 관리되고 있다. 하지만 여기에는 큰 제약이 따르는데 대부분의 배포판은 X86 하드웨어 타겟으로 이뤄져 있기 때문에 다양한 CPU 아키텍쳐에 걸쳐 일어나는 임베디드 개발 환경에 기민하게 대응하기 어렵다. 때문에 임베디드 Linux의 개발은 Bottom-Up으로 이뤄지는데 Bootloader, Kernel의 선택부터 필수적인 Package, User Application의 추가, 그리고 이를 Build, Install, Packaging하는 과정까지 사용자가 세세하게 관리하며 원하는 최적의 Customized Linux를 만들어 내게 된다. Yocto는 이런 과정을 효율적으로 통제할 수 있는 도구 모음이다. 보드, 칩 업체에서 제공하는 BSP가 있지 않냐는 질문이 있을 수 있을 것 같은데, 요새는 그 BSP를 Yocto를 통해 만든다. 이런 이유로 최근의 임베디드 Linux 개발자에게 Yocto는 피해갈 수 없는 Tech stack이 되었고&hellip; 그런 이유로 나도 공부를 조금씩 해보고 있다.</p>
+<p>내가 Yocto 공부를 하면서 겪은 어려움은 크게 두 가지였다. 첫 번째 한글로 적힌 Yocto 관련 글들이 많지 않다는 것, 두 번째 그나마 있는 한글 Blog 자료의 설명은 Yocto를 처음 시작하는 사람이 보기에 지나치게 크고 추상적인 부분의 설명에 주로 할애되어 있다는 것이다. 그래서 아래는 최대한 처음 시작하는 사람이 Getting start하며 이 도구를 이해하는 데 도움을 줄 수 있도록 적어보았다.</p>
+<p>일단 <code>Yocto project</code>는 는 하나의 Customized Linux 빌드를 할 수 있게 해주는 여러 도구의 모음, 그리고 이 도구를 사용하는 방법 자체이다. 이를 구성하는 도구들는</p>
+<p>Open source 상의 여러 package들이 있으며,</p>
+<pre><code>$ sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat libsdl1.2-dev xterm
+</code></pre><p><code>Yocto project</code> 자체의 것도 있다.</p>
+<pre><code>$ git clone git://git.yoctoproject.org/poky
+</code></pre><p><code>poky</code> repository가 포함하는 것들이 사실 <code>Yocto project</code>의 핵심인데, Linux를 만들 수 있는 중요한 핵심 Meta(몇몇 자주 쓰이는 Kernel과 Bootloader, 그리고 중요 package 등)와 이 Meta를 읽고 처리할 수 있는 핵심 도구(Script 등)이 있다.</p>
+<p><code>poky</code> repository를 베이스로 도구를 사용할 수 있는 기본 환경을 만들고</p>
+<pre><code>$ source oe-init-build-env
+</code></pre><p>이 때 만들어지는 <code>bblayers.conf</code>, <code>local.conf</code>, <code>templateconf.cfg</code>파일 등을 원하는 대로 바꿔준다. 실제 내부에서 사용할 수 있는 keyword와 그에 대한 설명은 두꺼운 책 한 권으로도 모자랄 정도이니 이 부분은 Case by Case로 공부해야 한다. 중요한 포인트는 다음과 같다.</p>
+<ul>
+<li><code>bblayers.conf</code>: 여러 추가 Meta(Recipe가 담긴 Layer)들의 위치 정보를 담고 있다.</li>
+<li><code>local.conf</code>: Device와 기본 Build 환경를 담고 있다.</li>
+<li><code>templateconf.cfg</code>: 추가 설정에 대한 정보를 담고 있다.</li>
+</ul>
+<p>수정 이후 bitbake 명령어를 통해 특정 Meta안에 있는 Recipe를 수행하는데, 이는 내부의 핵심 도구를 통해 Fetch, Build, Install 등의 Step을 &ldquo;Project 기본 설정 + Recipe 설정&quot;에 기반해 수행한다. 이 때 하나의 Recipe가 다른 Recipes의 Dependance를 가지고 있으면 추가 Dependance recipe 수행이 연쇄적으로 일어난다.</p>
+<p>(흠 써놓고 보니&hellip; 나도 썩 잘 설명은 못한 것 같네. 나중에 조금씩 수정해봐야지.)</p>
+</div>
+        <div class="post-footer">
+            <div class="info">
+                
+                
+            </div>
+        </div>
+
+        
+            
+        
+    </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="https://blog.leeminwoo.dev/js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="https://blog.leeminwoo.dev/js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="https://blog.leeminwoo.dev/js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

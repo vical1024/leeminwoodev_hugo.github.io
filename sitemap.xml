@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://blog.leeminwoo.dev/post/growth_19th_jan_2021/</loc>
-    <lastmod>2021-01-19T11:37:48+09:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://blog.leeminwoo.dev/</loc>
-    <lastmod>2021-01-19T11:37:48+09:00</lastmod>
+    <lastmod>2021-01-23T21:36:54+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.leeminwoo.dev/post/</loc>
+    <lastmod>2021-01-23T21:36:54+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.leeminwoo.dev/post/yocto_1st/</loc>
+    <lastmod>2021-01-23T21:36:54+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.leeminwoo.dev/post/growth_19th_jan_2021/</loc>
     <lastmod>2021-01-19T11:37:48+09:00</lastmod>
   </url>
   
