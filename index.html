@@ -10,7 +10,7 @@
   </title>
 
   
-  <meta charset="utf-8" /><meta name="generator" content="Hugo 0.76.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta charset="utf-8" /><meta name="generator" content="Hugo 0.111.3"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta
     name="description"
     content="
@@ -27,8 +27,8 @@ Mainly works in automotive industry
   
   <link
     rel="stylesheet"
-    href="/css/main.min.ea1cf963500405b0bb491cd342203bf6f2859476ab54dcf5ebb40b3dcd90076c.css"
-    integrity="sha256-6hz5Y1AEBbC7SRzTQiA79vKFlHarVNz167QLPc2QB2w="
+    href="/css/main.min.4e52d6a0537abdc52061a1e64b2ec8c5ade218b6c0ef957ac0505f04ff92b6d4.css"
+    integrity="sha256-TlLWoFN6vcUgYaHmSy7Ixa3iGLbA75V6wFBfBP&#43;SttQ="
     crossorigin="anonymous"
     type="text/css"
   />
@@ -36,8 +36,8 @@ Mainly works in automotive industry
   
   <link
     rel="stylesheet"
-    href="/css/markupHighlight.min.cc84ed683057cc175ddfa738ea6ba2d5c882b95cb64f50bf9be918cb3791887b.css"
-    integrity="sha256-zITtaDBXzBdd36c46mui1ciCuVy2T1C/m&#43;kYyzeRiHs="
+    href="/css/markupHighlight.min.f798cbda9aaa38f89eb38be6414bd082cfd71a6780375cbf67b6d2fb2b96491e.css"
+    integrity="sha256-95jL2pqqOPies4vmQUvQgs/XGmeAN1y/Z7bS&#43;yuWSR4="
     crossorigin="anonymous"
     type="text/css"
   />
@@ -46,8 +46,8 @@ Mainly works in automotive industry
     
     <link
       rel="stylesheet"
-      href="/css/syntax.min.6d9a3ba8d199f87d14facd44dd24464f86ed6925cfcf6bf7f56e160432d013e3.css"
-      integrity="sha256-bZo7qNGZ&#43;H0U&#43;s1E3SRGT4btaSXPz2v39W4WBDLQE&#43;M="
+      href="/css/syntax.min.e5729af38e6b50ee0002cdac6e7f72e57e13bc01c7165fad09a9bf691a1b0dbf.css"
+      integrity="sha256-5XKa845rUO4AAs2sbn9y5X4TvAHHFl&#43;tCam/aRobDb8="
       crossorigin="anonymous"
       media="screen"
     />
@@ -76,8 +76,8 @@ Mainly works in automotive industry
   
   <script
     type="text/javascript"
-    src="/js/anatole-header.min.413f798d8aa82610bef17a5ca1d7e962ec185be395f1aeb3f45d1891af568b65.js"
-    integrity="sha256-QT95jYqoJhC&#43;8XpcodfpYuwYW&#43;OV8a6z9F0Yka9Wi2U="
+    src="/js/anatole-header.min.d0408165d31a17f17bba83038bf54e86121f85021bdf936382e636f0f77a952f.js"
+    integrity="sha256-0ECBZdMaF/F7uoMDi/VOhhIfhQIb35NjguY28Pd6lS8="
     crossorigin="anonymous"
   ></script>
 
@@ -206,7 +206,7 @@ Mainly works in automotive industry
         &copy;
         
           Minwoo Lee
-          2021
+          2023
 
 
         
@@ -244,13 +244,58 @@ Mainly works in automotive industry
     >
       
       <div class="post-title">
-        <h3><a href="/post/yocto_1st/">Yocto 공부</a></h3>
+        <h3><a href="/post/yocto_example_specific_rasberrypi_image/">Yocto를 이용해 나만의 rasberrypi image를 만들어보기 (1)</a></h3>
       </div>
       <div class="post-content">
         <div class="p_part">
           <p>
             
-              일반적인 PC 환경에서는 기성 배포판을 커스터마이징하는 Top-Down방식으로 원하는 형태의 Linux를 얻을 수 있다. 개인이 운영하는 Linux는 물론 크고 작은 Enterprise 서버 환경에서 동작하는 Linux등은 모두 이러한 방식으로 생성되고 관리되고 있다. 하지만 여기에는 큰 제약이 따르는데 대부분의 배포판은 X86 하드웨어 타겟으로 이뤄져 있기 때문에 다양한 CPU 아키텍쳐에 걸쳐 일어나는 임베디드 개발 환경에 기민하게 대응하기 어렵다. 때문에 임베디드 Linux의 개발은 Bottom-Up으로 이뤄지는데 Bootloader, Kernel의 선택부터 필수적인 Package, User Application의 추가, 그리고 이를 Build, Install, Packaging하는 과정까지 사용자가 세세하게 관리하며 원하는 최적의 Customized Linux를 만들어 내게 된다.
+              이전 포스트에서 Yocto의 장점에서만 나열했던 것 같은데, 아래와 같은 점들도 감안을 해야 할 것 같아 간단하게 정리한다. (단점이라고 하기는 애매하고&hellip;) 실제 프로젝트를 진행할 때는 필수로 감안되어야 할 것이다.
+프로젝트의 방대함으로 오는 관리의 어려움이 있다. Yocto는 결국 도구일 뿐이며 이를 운영하는 조직이나 사람에 따라 천차만별의 효율로 쓰일 수 있는데 레시피의 관리, 개발 프로세스의 관리 등을 상환에 따라 잘 고려해야 한다. (여기서 말하는 &ldquo;잘&quot;에 대해서는 다음에 한 번 더 고민해보자.) Recipe에서 각각의 개별 저장소를 다운받는 것으로부터 빌드가 시작된다.
+
+
+            
+          </p>
+          <a href="/post/yocto_example_specific_rasberrypi_image/" class="read_more">Read more</a></div>
+      </div>
+
+      
+      <div class="post-footer">
+        <div class="meta">
+          <div class="info">
+            <em class="fas fa-calendar-day"></em>
+            <span class="date"
+              >
+                Sun, Jan 24, 2021
+
+
+              </span
+            >
+            
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+    <div
+      class="post 
+        animated fadeInDown
+
+      "
+    >
+      
+      <div class="post-title">
+        <h3><a href="/post/yocto_1st/">Yocto intro</a></h3>
+      </div>
+      <div class="post-content">
+        <div class="p_part">
+          <p>
+            
+              x86 아키텍처는 Intel과 AMD의 프로세서에서 널리 사용되는 아키텍처로 범용성이 좋아 운영 체제와 소프트웨어를 지원하며 많은 개발자와 사용자들이 익숙하게 사용하고 있다. 지금 이 글을 쓰는 컴퓨터는 물론 거의 대대분의 개인 컴퓨터 및 서버 시장에서 사용되고 있으며, 이 유명세에 힘입어 대부분의 배포판 리눅스들은 대부분 x86 아키텍처를 기반으로 개발되고 지원되고 최적화되어 있다.
+하지만 임베디드 제품 환경에서는 상황이 다르다. 임베디드 제품에는 다양한 CPU 아키텍쳐들이 폭넓게 사용된다. 따라서 당연히 x86 아키텍처을 주력으로 하는 배포판 리눅스를 사용하기 어렵다.
 
 
             
@@ -367,8 +412,6 @@ Mainly works in automotive industry
   
   <div class="pagination">
     
-
-
   </div>
 
 
@@ -382,7 +425,7 @@ Mainly works in automotive industry
         &copy;
         
           Minwoo Lee
-          2021
+          2023
 
 
         

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html
+  dir="ltr"
+  lang="en"
+  data-theme=""
+><head>
+  <title>
+    Minwoo Lee
+      |
+      Yocto를 이용해 나만의 rasberrypi image를 만들어보기 (1)
+
+
+    
+
+  </title>
+
+  
+  <meta charset="utf-8" /><meta name="generator" content="Hugo 0.111.3"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta
+    name="description"
+    content="
+      Developer
+C, C&#43;&#43;, Python, Go, Rust, Linux, Yocto
+Mainly works in automotive industry
+
+
+
+    "
+  />
+  
+  
+  
+  <link
+    rel="stylesheet"
+    href="/css/main.min.4e52d6a0537abdc52061a1e64b2ec8c5ade218b6c0ef957ac0505f04ff92b6d4.css"
+    integrity="sha256-TlLWoFN6vcUgYaHmSy7Ixa3iGLbA75V6wFBfBP&#43;SttQ="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  
+  <link
+    rel="stylesheet"
+    href="/css/markupHighlight.min.f798cbda9aaa38f89eb38be6414bd082cfd71a6780375cbf67b6d2fb2b96491e.css"
+    integrity="sha256-95jL2pqqOPies4vmQUvQgs/XGmeAN1y/Z7bS&#43;yuWSR4="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+    
+    
+    <link
+      rel="stylesheet"
+      href="/css/syntax.min.e5729af38e6b50ee0002cdac6e7f72e57e13bc01c7165fad09a9bf691a1b0dbf.css"
+      integrity="sha256-5XKa845rUO4AAs2sbn9y5X4TvAHHFl&#43;tCam/aRobDb8="
+      crossorigin="anonymous"
+      media="screen"
+    />
+
+  
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+    crossorigin="anonymous"
+  />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+  <link rel="canonical" href="/post/yocto_example_specific_rasberrypi_image/" />
+
+  
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/anatole-header.min.d0408165d31a17f17bba83038bf54e86121f85021bdf936382e636f0f77a952f.js"
+    integrity="sha256-0ECBZdMaF/F7uoMDi/VOhhIfhQIb35NjguY28Pd6lS8="
+    crossorigin="anonymous"
+  ></script>
+
+  
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Yocto를 이용해 나만의 rasberrypi image를 만들어보기 (1)"/>
+<meta name="twitter:description" content="이전 포스트에서 Yocto의 장점에서만 나열했던 것 같은데, 아래와 같은 점들도 감안을 해야 할 것 같아 간단하게 정리한다. (단점이라고 하기는 애매하고&hellip;) 실제 프로젝트를 진행할 때는 필수로 감안되어야 할 것이다.
+프로젝트의 방대함으로 오는 관리의 어려움이 있다. Yocto는 결국 도구일 뿐이며 이를 운영하는 조직이나 사람에 따라 천차만별의 효율로 쓰일 수 있는데 레시피의 관리, 개발 프로세스의 관리 등을 상환에 따라 잘 고려해야 한다. (여기서 말하는 &ldquo;잘&quot;에 대해서는 다음에 한 번 더 고민해보자.) Recipe에서 각각의 개별 저장소를 다운받는 것으로부터 빌드가 시작된다."/>
+
+
+
+  
+</head>
+<body>
+    <header><div
+  class="page-top 
+    animated fadeInDown
+
+  "
+>
+  <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+  </a>
+  <nav>
+    <ul class="nav__list" id="navMenu">
+      <div class="nav__links">
+        
+        
+          
+          <li>
+            <a
+              
+              href="/"
+              
+              title=""
+              >Home</a
+            >
+          </li>
+
+        
+          
+          <li>
+            <a
+              
+              href="/post/"
+              
+              title=""
+              >Posts</a
+            >
+          </li>
+
+        
+          
+          <li>
+            <a
+              
+              href="/about/"
+              
+              title=""
+              >About</a
+            >
+          </li>
+
+        
+        
+      </div>
+      <li>
+        
+      </li>
+    </ul>
+  </nav>
+</div>
+</header>
+    <div class="wrapper">
+      <aside><div
+  class="sidebar
+    animated fadeInDown
+
+  "
+>
+  <div class="sidebar__content">
+    <div class="logo-title">
+      <div class="title">
+        <img src="/profile-image/profile.jpg" alt="profile picture" />
+        <h3 title=""><a href="/">Minwoo Lee</a></h3>
+        <div class="description">
+          <p>Developer<br />C, C++, Python, Go, Rust, Linux, Yocto<br />Mainly works in automotive industry<br /></p>
+        </div>
+      </div>
+    </div>
+    <ul class="social-links">
+      
+        <li>
+          <a href="https://www.linkedin.com/in/85minwoolee" rel="me" aria-label="Linkedin">
+            <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+
+      
+        <li>
+          <a href="https://github.com/vical1024" rel="me" aria-label="GitHub">
+            <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+
+      
+        <li>
+          <a href="mailto:vical1024@gmail.com" rel="me" aria-label="e-mail">
+            <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+
+      
+    </ul>
+  </div><footer class="footer footer--sidebar">
+  <div class="by_farbox">
+    <ul class="footer__list">
+      <li class="footer__item">
+        &copy;
+        
+          Minwoo Lee
+          2023
+
+
+        
+      </li>
+      
+    </ul>
+  </div>
+</footer></div>
+</aside>
+      <main>
+        <div class="autopagerize_page_element">
+          <div class="content">
+  <div
+    class="post 
+      animated fadeInDown
+
+    "
+  >
+    <div class="post-content">
+      
+      <div class="post-title">
+        <h1>Yocto를 이용해 나만의 rasberrypi image를 만들어보기 (1)</h1>
+        
+          <div class="info">
+            <em class="fas fa-calendar-day"></em>
+            <span class="date"
+              >
+                Sun, Jan 24, 2021
+
+
+              </span
+            >
+            <em class="fas fa-stopwatch"></em>
+            <span class="reading-time">3-minute read</span>
+          </div>
+
+        
+      </div><p>이전 포스트에서 Yocto의 장점에서만 나열했던 것 같은데, 아래와 같은 점들도 감안을 해야 할 것 같아 간단하게 정리한다. (단점이라고 하기는 애매하고&hellip;) 실제 프로젝트를 진행할 때는 필수로 감안되어야 할 것이다.</p>
+<ul>
+<li>프로젝트의 방대함으로 오는 관리의 어려움이 있다. Yocto는 결국 도구일 뿐이며 이를 운영하는 조직이나 사람에 따라 천차만별의 효율로 쓰일 수 있는데 레시피의 관리, 개발 프로세스의 관리 등을 상환에 따라 잘 고려해야 한다. (여기서 말하는 &ldquo;잘&quot;에 대해서는 다음에 한 번 더 고민해보자.)</li>
+<li>Recipe에서 각각의 개별 저장소를 다운받는 것으로부터 빌드가 시작된다. 이는 다시 말하면 각 개별 컴포넌트의 소스코드 혹은 배포 산출물을 저장할 수 있는 충분한 공간이 필요하다는 말이다. 간단한 시스템이면 모르겠지만, 다양한 컴포넌트를 다루는 빌드를 진행할 경우 어마무시한 용량을 사용하게 된다. 내가 지금 회사에서 개발하는 Yocto base 프로젝트는 50G를 훌쩍 넘는 공간 가용량을 필요로 한다.</li>
+<li>먼저 말했듯 Recipe에서 각각의 개별 저장소를 다운받아야 하니 다운받는 시간이 필요하고, 컴포넌트 빌드가 필요한 경우 이를 진행되어야 한다. 이 때문에 몇 십개, 몇 백개의 Recipe에 대해 이런 과정들을 모두 진행되어야 하니 전체 빌드 시간이 오래 걸리게 된다. 개선할 수 있는 방법은 있지만 Yocto의 구조적인 부분 때문에 개선할 수 있는 부분은 한계가 있다.</li>
+<li>(다른 분들은 잘나서 그런지 이런 코멘트를 본 적이 없는데, 그렇다면&hellip; 나 자신 한정) <strong>빌드에 문제가 있는 경우 가끔씩 Bitbake python코드를 디버깅 할 일이 있었는데 변수나 함수의 이름들이 너무 간략하게 정의되어 있고 너무 중복적으로 나타나서 코드를 분석하는데 어려움을 겪었다.</strong></li>
+</ul>
+<p>나는 Yocto 없는 리눅스 제품 개발을 해본적이 없어 정확한 비교를 하긴 힘들지만, <strong>위와 같은 점들을 감안하더라고 임베디드 리눅스를 개발하는 어렵지만 가장 쉬운 길은 Yocto라고 생각한다</strong>. Yocto없이 이에 해당하는 작업들을 일일히 직접 관리하고 포팅한다고 가정하면 생각만으로 머리가 지끈하다.</p>
+<h2 id="나만의-rasberrypi-image를-만들어보기---환경">나만의 rasberrypi image를 만들어보기 - 환경</h2>
+<p>Docker 이미지를 이용해 보겠다. Docker 이미지를 사용하면 호스트 시스템에 Yocto Project의 의존성을 설치하지 않고도 Yocto 빌드 환경을 쉽게 설정할 수 있다. Raspberrypi 재단에서 관리하는 <a href="https://github.com/agherzan/meta-raspberrypi">https://github.com/agherzan/meta-raspberrypi</a>에는 해당 저장소를 관리하기 위한 github action 설정이 존재하는데, 이들 github action들은 Docker환경에서 수행된다. 그리고 이 Docker환경을 구성하고 관리하기 위한 Dockerfile이 존재한다. 아쉽게도 One-step은 아니지만 해당 항목을 분석하면 좀 더 용이하게 rasberrypi image를 만들기 위한 Yocto 빌드 환경을 만들 수 있을 것이다.</p>
+<p>yocto-dockerfiles 저장소를 클론하고</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git clone https://github.com/agherzan/meta-raspberrypi.git
+</span></span><span style="display:flex;"><span>$ cd meta-raspberrypi/.github/workflows/docker-images
+</span></span></code></pre></div><p>.github/workflows/docker-images/yocto-builder/Dockerfile를 살펴보면 ubuntu:20.04에 Yocto에 필요한 패키지를 다운받는 걸 확인할 수 있다. 하지만 이 스크립트에서 Poky 저장소를 가져오진 않는다. 좀 더 살펴볼 필요가 있다.</p>
+<pre tabindex="0"><code class="language-file" data-lang="file">FROM ubuntu:20.04
+...
+RUN eatmydata apt-get install -qq -y \
+    gawk wget git diffstat unzip texinfo gcc build-essential chrpath \
+    socat cpio python3 python3-pip python3-pexpect xz-utils debianutils \
+    iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev \
+    pylint3 xterm python3-subunit mesa-common-dev zstd liblz4-tool
+</code></pre><p>이 Dockerfile마지막에 .github/workflows/docker-images/yocto-builder/entrypoint-build.sh을 복사해두는데, 여기에서 poky를 가져온다. entrypoint-build.sh를 잘 살펴보며 스크립트 전반에 많은 매개변수를 필요로 하는데</p>
+<pre tabindex="0"><code class="language-file" data-lang="file">REPOS=&#34; \
+    git://git.yoctoproject.org/poky.git \
+&#34;
+for repo in $REPOS; do
+    log &#34;Cloning $repo on branch $BASE_REF...&#34;
+    git clone --depth 1 --branch &#34;$BASE_REF&#34; &#34;$repo&#34;
+done
+
+# shellcheck disable=SC1091,SC2240
+. ./poky/oe-init-build-env build
+</code></pre><p>.github/workflows/yocto-builds.yml에 볼 수 있듯이 workflow를 수행할 때 매개변수와 함께 entrypoint-build.sh를 수행해 주는 것을 볼 수 있다.</p>
+<pre tabindex="0"><code class="language-file" data-lang="file">          docker run --rm \
+            -v &#34;$GITHUB_WORKSPACE:/work:ro&#34; \
+            -v &#34;$DL_DIR:$DL_DIR:rw&#34; \
+            -v &#34;$SSTATE_DIR:$SSTATE_DIR:rw&#34; \
+            --env &#34;BASE_REF=$GITHUB_BASE_REF&#34; \
+            --env &#34;MACHINE=${{ matrix.machine }}&#34; \
+            --env &#34;DISTRO=${{ matrix.distro }}&#34; \
+            --env &#34;IMAGE=${{ matrix.image }}&#34; \
+            --env &#34;DL_DIR=$DL_DIR&#34; \
+            --env &#34;SSTATE_DIR=$SSTATE_DIR&#34; \
+            &#34;yocto-builder-${{ github.event.number }}&#34; \
+            /entrypoint-build.sh
+</code></pre><p>다시 한 번 entrypoint-build.sh을 보니까 meta layer추가와 bitbake까지 모두 수행해준다.</p>
+<pre tabindex="0"><code class="language-file" data-lang="file"># Add the BSP layer
+bitbake-layers add-layer &#34;$META_RASPBERRYPI_PATH&#34;
+...
+# Fire!
+MACHINE=&#34;$MACHINE&#34; bitbake &#34;$IMAGE&#34;
+</code></pre><p>그럼 나는 clone해두었던 meta-raspberrypi 저장소에서 entrypoint-build.sh의 마지막 두 줄만 삭제해 entrypoint-build.sh에서 bitbake build가 시작되는 걸 막고, 이 상태에서 docker image를 빌드한 후에 matrix.machine, matrix.distro, matrix.image을 적당하게 채워주고 docker run entrypoint-build.sh을 수행한 후에 다시 bash 쉘로 접근해 보려고 한다.</p>
+</div>
+    <div class="post-footer">
+      <div class="info">
+        
+
+        
+      </div>
+    </div>
+
+    
+  </div>
+
+
+          </div>
+        </div>
+      </main>
+    </div><footer class="footer footer--base">
+  <div class="by_farbox">
+    <ul class="footer__list">
+      <li class="footer__item">
+        &copy;
+        
+          Minwoo Lee
+          2023
+
+
+        
+      </li>
+      
+    </ul>
+  </div>
+</footer></body>
+</html>
