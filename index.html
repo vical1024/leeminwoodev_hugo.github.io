@@ -244,14 +244,58 @@ Mainly works in automotive industry
     >
       
       <div class="post-title">
+        <h3><a href="/post/brain_hacking_start/">2023 medical check result</a></h3>
+      </div>
+      <div class="post-content">
+        <div class="p_part">
+          <p>
+            
+              우리 회사는 1년에 한 번 종합건강검진을 지원해준다. 실비로 20만원 가량의 검사인데 정기적으로 내 몸의 상태를 대략적으로나마 점검할 수 있다는 건 참으로 감사한 일이다.
+최근 이번 년도 5월 초에 받았던 건강검진 결과를 지난 주에 받았는데 결과지에는 예전 젊었을 때와 다르게 이것저것 안 좋은 소리들이 많이 쓰여진다. 위 내시경을 할 때는 위 안에 미란성 위염 징후들이 가져온 위벽 내 상처난 부분들을 제거하고 제거한 부분의 조직 검사까지 진행했다. 검사 결과에 큰 문제는 없었지만 이 일은 내게 적지않은 충격을 가져다 주었다.
+
+
+            
+          </p>
+          <a href="/post/brain_hacking_start/" class="read_more">Read more</a></div>
+      </div>
+
+      
+      <div class="post-footer">
+        <div class="meta">
+          <div class="info">
+            <em class="fas fa-calendar-day"></em>
+            <span class="date"
+              >
+                Wed, Jun 7, 2023
+
+
+              </span
+            >
+            
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+    <div
+      class="post 
+        animated fadeInDown
+
+      "
+    >
+      
+      <div class="post-title">
         <h3><a href="/post/yocto_example_specific_rasberrypi_image/">Yocto를 이용해 나만의 rasberrypi image를 만들어보기 (1)</a></h3>
       </div>
       <div class="post-content">
         <div class="p_part">
           <p>
             
-              이전 포스트에서 Yocto의 장점에서만 나열했던 것 같은데, 아래와 같은 점들도 감안을 해야 할 것 같아 간단하게 정리한다. (단점이라고 하기는 애매하고&hellip;) 실제 프로젝트를 진행할 때는 필수로 감안되어야 할 것이다.
-프로젝트의 방대함으로 오는 관리의 어려움이 있다. Yocto는 결국 도구일 뿐이며 이를 운영하는 조직이나 사람에 따라 천차만별의 효율로 쓰일 수 있는데 레시피의 관리, 개발 프로세스의 관리 등을 상환에 따라 잘 고려해야 한다. (여기서 말하는 &ldquo;잘&quot;에 대해서는 다음에 한 번 더 고민해보자.) Recipe에서 각각의 개별 저장소를 다운받는 것으로부터 빌드가 시작된다.
+              이전 포스트에서
+나만의 rasberrypi image를 만들어보기 - 환경 Docker 이미지를 이용해 보겠다. Docker 이미지를 사용하면 호스트 시스템에 Yocto Project의 의존성을 설치하지 않고도 Yocto 빌드 환경을 쉽게 설정할 수 있다. Raspberrypi 재단에서 관리하는 https://github.com/agherzan/meta-raspberrypi에는 해당 저장소를 관리하기 위한 github action 설정이 존재하는데, 이들 github action들은 Docker환경에서 수행된다. 그리고 이 Docker환경을 구성하고 관리하기 위한 Dockerfile이 존재한다. 아쉽게도 One-step은 아니지만 해당 항목을 분석하면 좀 더 용이하게 rasberrypi image를 만들기 위한 Yocto 빌드 환경을 만들 수 있을 것이다.
 
 
             
@@ -294,8 +338,8 @@ Mainly works in automotive industry
         <div class="p_part">
           <p>
             
-              x86 아키텍처는 Intel과 AMD의 프로세서에서 널리 사용되는 아키텍처로 범용성이 좋아 운영 체제와 소프트웨어를 지원하며 많은 개발자와 사용자들이 익숙하게 사용하고 있다. 지금 이 글을 쓰는 컴퓨터는 물론 거의 대대분의 개인 컴퓨터 및 서버 시장에서 사용되고 있으며, 이 유명세에 힘입어 대부분의 배포판 리눅스들은 대부분 x86 아키텍처를 기반으로 개발되고 지원되고 최적화되어 있다.
-하지만 임베디드 제품 환경에서는 상황이 다르다. 임베디드 제품에는 다양한 CPU 아키텍쳐들이 폭넓게 사용된다. 따라서 당연히 x86 아키텍처을 주력으로 하는 배포판 리눅스를 사용하기 어렵다.
+              x86는 Intel과 AMD의 프로세서에서 널리 사용되는 CPU 아키텍처로 범용성이 좋아 많은 운영체제와 소프트웨어가 이를 지원하고 있으며 많은 개발자와 일반 사용자들이 폭넒게 사용하고 있다. 이 유명세에 힘입어 대부분의 배포판 리눅스들은 대부분 x86 아키텍처를 기반으로 개발되고 지원되고 최적화되어 있다.
+하지만 임베디드 제품 환경에서는 상황이 다르다. 임베디드 제품에는 다양한 CPU 아키텍쳐들이 전천후로 사용된다. 따라서 당연히 x86 아키텍처을 주력으로 하는 배포판 리눅스는 임베디드 환경에서 사용하기 어렵다. 그래서 임베디드 리눅스 환경의 개발은 배포판을 사용하는 대신 Bottom-Up으로 진행된다.
 
 
             
