@@ -3,15 +3,12 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://blog.leeminwoo.dev/</loc>
-    <lastmod>2026-04-02T00:00:00+09:00</lastmod>
-  </url><url>
-    <loc>https://blog.leeminwoo.dev/post/</loc>
-    <lastmod>2026-04-02T00:00:00+09:00</lastmod>
-  </url><url>
-    <loc>https://blog.leeminwoo.dev/post/test_2026_04_02/</loc>
-    <lastmod>2026-04-02T00:00:00+09:00</lastmod>
+    <lastmod>2023-06-07T12:44:00+09:00</lastmod>
   </url><url>
     <loc>https://blog.leeminwoo.dev/post/2023_medical_check/</loc>
+    <lastmod>2023-06-07T12:44:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.leeminwoo.dev/post/</loc>
     <lastmod>2023-06-07T12:44:00+09:00</lastmod>
   </url><url>
     <loc>https://blog.leeminwoo.dev/post/yocto_example_specific_rasberrypi_image/</loc>
