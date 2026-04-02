@@ -1,0 +1,24 @@
+backend:
+  name: github
+  repo: vical1024/leeminwoodev_hugo_res
+  branch: master
+
+publish_mode: editorial_workflow
+
+media_folder: static/images
+public_folder: /images
+
+collections:
+  - name: post
+    label: Posts
+    folder: content/post
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      - { label: "Description", name: "Description", widget: "string", required: false }
+      - { label: "Tags", name: "Tags", widget: "list", required: false }
+      - { label: "Categories", name: "Categories", widget: "list", required: false }
+      - { label: "Disable Comments", name: "DisableComments", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }
