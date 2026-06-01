@@ -6,7 +6,18 @@
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ko</language>
-    <lastBuildDate>Mon, 06 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.leeminwoo.dev/ko/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 01 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.leeminwoo.dev/ko/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fleet-scale MLOps on Automotive industry</title>
+      <link>https://blog.leeminwoo.dev/ko/post/2026-06-01-fleet-scale-mlops-on-automotive-industry/</link>
+      <pubDate>Mon, 01 Jun 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.leeminwoo.dev/ko/post/2026-06-01-fleet-scale-mlops-on-automotive-industry/</guid>
+      
+        <description>&lt;p&gt;요즘 자동차 업계에서도 AI 이야기가 많습니다. 차량 내 LLM, AI Agent, 운전자 상태 감지, 자율주행 모델, 개인화 기능 같은 주제들이 계속 등장합니다. 다만 그 논의가 종종 “차량에 어떤 AI 기능을 넣을 것인가”에 머무는 것처럼 느껴질 때가 있습니다. 특정 기능을 위해 추론 모델을 개발하자, 기존 기능에 AI 기반 판단 로직을 붙여보자, 차량 내 사용자 경험을 더 똑똑하게 만들어보자 같은 이야기는 비교적 쉽게 나옵니다. 반면 그 모델들이 실제 차량 fleet 위에서 어떻게 관리되고, 검증되고, 개선될 것인지에 대한 논의는 상대적으로 덜 다뤄지는 것처럼 보입니다.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>AI 시대의 노동의 가치</title>
       <link>https://blog.leeminwoo.dev/ko/post/2026-04-06-ai/</link>

@@ -1,0 +1,426 @@
+<!doctype html>
+<html
+  dir="ltr"
+  lang="ko"
+  data-theme=""
+  
+    class="html theme--light"
+  
+><head>
+  <meta charset="utf-8" /><title>
+    Minwoo Lee
+        |
+        Fleet-scale MLOps on Automotive industry
+      
+
+    
+
+  </title>
+
+  <meta name="generator" content="Hugo 0.159.2"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="author" content="Minwoo Lee" />
+  <meta
+    name="description"
+    content="Developer
+C, C&#43;&#43;, Python, Go, Rust, Linux, Yocto
+Mainly works in automotive industry
+"
+  />
+  
+  
+        <link rel="stylesheet" href="/css/anatole.min.c6dc8a0ff11f3f809388b7a1c6efacfc9f94cde542f6c3c5914e06ed87851fa3.css" integrity="sha256-xtyKD/EfP4CTiLehxu&#43;s/J&#43;UzeVC9sPFkU4G7YeFH6M=" crossorigin="anonymous" />
+      
+  <link
+    rel="stylesheet"
+    href="/css/markupHighlight.min.f8ba48d3fd92c731701d9634494275b2f2bc2ad0bea19b438feb41b25052f83b.css"
+    integrity="sha256-&#43;LpI0/2SxzFwHZY0SUJ1svK8KtC&#43;oZtDj&#43;tBslBS&#43;Ds="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+    
+    
+    <link
+      rel="stylesheet"
+      href="/css/syntax.min.e5729af38e6b50ee0002cdac6e7f72e57e13bc01c7165fad09a9bf691a1b0dbf.css"
+      integrity="sha256-5XKa845rUO4AAs2sbn9y5X4TvAHHFl&#43;tCam/aRobDb8="
+      crossorigin="anonymous"
+      media="screen"
+    />
+  
+  
+  <link
+    rel="stylesheet"
+    href="/fontawesome/css/fontawesome.min.137b1cf3cea9a8adb7884343a9a5ddddf4280f59153f74dc782fb7f7bf0d0519.css"
+    integrity="sha256-E3sc886pqK23iENDqaXd3fQoD1kVP3TceC&#43;3978NBRk="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  <link
+    rel="stylesheet"
+    href="/fontawesome/css/solid.min.e65dc5b48fb5f39b142360c57c3a215744c94e56c755c929cc3e88fe12aab4d3.css"
+    integrity="sha256-5l3FtI&#43;185sUI2DFfDohV0TJTlbHVckpzD6I/hKqtNM="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  <link
+    rel="stylesheet"
+    href="/fontawesome/css/regular.min.6f4f16d58da1c82c0c3a3436e021a3d39b4742f741192c546e73e947eacfd92f.css"
+    integrity="sha256-b08W1Y2hyCwMOjQ24CGj05tHQvdBGSxUbnPpR&#43;rP2S8="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  <link
+    rel="stylesheet"
+    href="/fontawesome/css/brands.min.e10425ad768bc98ff1fb272a0ac8420f9d1ba22f0612c08ff1010c95080ffe7e.css"
+    integrity="sha256-4QQlrXaLyY/x&#43;ycqCshCD50boi8GEsCP8QEMlQgP/n4="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+  <link rel="canonical" href="https://blog.leeminwoo.dev/ko/post/2026-06-01-fleet-scale-mlops-on-automotive-industry/" />
+  
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/anatole-header.min.f9132794301a01ff16550ed66763482bd848f62243d278f5e550229a158bfd32.js"
+    integrity="sha256-&#43;RMnlDAaAf8WVQ7WZ2NIK9hI9iJD0nj15VAimhWL/TI="
+    crossorigin="anonymous"
+  ></script>
+
+  
+
+  
+
+  
+
+  
+
+
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Fleet-scale MLOps on Automotive industry">
+  <meta name="twitter:description" content="요즘 자동차 업계에서도 AI 이야기가 많습니다. 차량 내 LLM, AI Agent, 운전자 상태 감지, 자율주행 모델, 개인화 기능 같은 주제들이 계속 등장합니다. 다만 그 논의가 종종 “차량에 어떤 AI 기능을 넣을 것인가”에 머무는 것처럼 느껴질 때가 있습니다. 특정 기능을 위해 추론 모델을 개발하자, 기존 기능에 AI 기반 판단 로직을 붙여보자, 차량 내 사용자 경험을 더 똑똑하게 만들어보자 같은 이야기는 비교적 쉽게 나옵니다. 반면 그 모델들이 실제 차량 fleet 위에서 어떻게 관리되고, 검증되고, 개선될 것인지에 대한 논의는 상대적으로 덜 다뤄지는 것처럼 보입니다.">
+
+
+
+  
+  <meta property="og:url" content="https://blog.leeminwoo.dev/ko/post/2026-06-01-fleet-scale-mlops-on-automotive-industry/">
+  <meta property="og:site_name" content="Minwoo Lee">
+  <meta property="og:title" content="Fleet-scale MLOps on Automotive industry">
+  <meta property="og:description" content="요즘 자동차 업계에서도 AI 이야기가 많습니다. 차량 내 LLM, AI Agent, 운전자 상태 감지, 자율주행 모델, 개인화 기능 같은 주제들이 계속 등장합니다. 다만 그 논의가 종종 “차량에 어떤 AI 기능을 넣을 것인가”에 머무는 것처럼 느껴질 때가 있습니다. 특정 기능을 위해 추론 모델을 개발하자, 기존 기능에 AI 기반 판단 로직을 붙여보자, 차량 내 사용자 경험을 더 똑똑하게 만들어보자 같은 이야기는 비교적 쉽게 나옵니다. 반면 그 모델들이 실제 차량 fleet 위에서 어떻게 관리되고, 검증되고, 개선될 것인지에 대한 논의는 상대적으로 덜 다뤄지는 것처럼 보입니다.">
+  <meta property="og:locale" content="ko">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2026-06-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-06-01T00:00:00+00:00">
+
+
+
+  
+  
+  <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "articleSection": "post",
+        "name": "Fleet-scale MLOps on Automotive industry",
+        "headline": "Fleet-scale MLOps on Automotive industry",
+        "alternativeHeadline": "",
+        "description": "
+      
+        \u003cp\u003e요즘 자동차 업계에서도 AI 이야기가 많습니다. 차량 내 LLM, AI Agent, 운전자 상태 감지, 자율주행 모델, 개인화 기능 같은 주제들이 계속 등장합니다. 다만 그 논의가 종종 “차량에 어떤 AI 기능을 넣을 것인가”에 머무는 것처럼 느껴질 때가 있습니다. 특정 기능을 위해 추론 모델을 개발하자, 기존 기능에 AI 기반 판단 로직을 붙여보자, 차량 내 사용자 경험을 더 똑똑하게 만들어보자 같은 이야기는 비교적 쉽게 나옵니다. 반면 그 모델들이 실제 차량 fleet 위에서 어떻게 관리되고, 검증되고, 개선될 것인지에 대한 논의는 상대적으로 덜 다뤄지는 것처럼 보입니다.\u003c\/p\u003e
+
+
+      
+
+
+    ",
+        "license": "",
+        
+        "inLanguage": "ko",
+        "isFamilyFriendly": "true",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/blog.leeminwoo.dev\/ko\/post\/2026-06-01-fleet-scale-mlops-on-automotive-industry\/"
+        },
+        "author" : {
+            "@type": "Person",
+            "name": "Minwoo Lee"
+        },
+        "creator" : {
+            "@type": "Person",
+            "name": "Minwoo Lee"
+        },
+        "accountablePerson" : {
+            "@type": "Person",
+            "name": "Minwoo Lee"
+        },
+        "copyrightHolder" : {
+            "@type": "Person",
+            "name": "Minwoo Lee"
+        },
+        "dateCreated": "2026-06-01T00:00:00.00Z",
+        "datePublished": "2026-06-01T00:00:00.00Z",
+        "dateModified": "2026-06-01T00:00:00.00Z",
+        "publisher":{
+            "@type":"Organization",
+            "name": "Minwoo Lee",
+            "url": "https://blog.leeminwoo.dev/",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/blog.leeminwoo.dev\/favicon-32x32.png",
+                "width":"32",
+                "height":"32"
+            }
+        },
+        "image": 
+      [
+      ]
+
+    ,
+        "url" : "https:\/\/blog.leeminwoo.dev\/ko\/post\/2026-06-01-fleet-scale-mlops-on-automotive-industry\/",
+        "wordCount" : "1216",
+        "genre" : [ ],
+        "keywords" : [ ]
+    }
+  </script>
+
+
+
+
+  
+  
+  
+</head>
+<body class="body">
+    <div class="wrapper">
+      <aside
+        
+          class="wrapper__sidebar"
+        
+      ><div class="sidebar">
+  <div
+    class="sidebar__content 
+      animated fadeInDown
+    "
+  >
+    <div class="sidebar__introduction">
+      <img
+        class="sidebar__introduction-profileimage"
+        src="/profile-image/profile.jpg"
+        alt="profile picture"
+      />
+      
+        <div class="sidebar__introduction-title">
+          <a href="/ko">Minwoo Lee</a>
+        </div>
+      
+      <div class="sidebar__introduction-description">
+        <p>Developer<br />C, C++, Python, Go, Rust, Linux, Yocto<br />Mainly works in automotive industry<br /></p>
+      </div>
+    </div>
+    <ul class="sidebar__list">
+      
+        <li class="sidebar__list-item">
+          <a
+            href="https://www.linkedin.com/in/85minwoolee"
+            target="_blank"
+            rel="noopener me"
+            aria-label="Linkedin"
+            title="Linkedin"
+          >
+            <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+      
+        <li class="sidebar__list-item">
+          <a
+            href="https://github.com/vical1024"
+            target="_blank"
+            rel="noopener me"
+            aria-label="GitHub"
+            title="GitHub"
+          >
+            <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+      
+        <li class="sidebar__list-item">
+          <a
+            href="mailto:vical1024@gmail.com"
+            target="_blank"
+            rel="noopener me"
+            aria-label="e-mail"
+            title="e-mail"
+          >
+            <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div><footer class="footer footer__sidebar">
+  <ul
+    class="footer__list 
+      animated fadeInDown
+    "
+  >
+    <li class="footer__item">
+      &copy;
+      
+        Minwoo Lee
+        2026
+      
+    </li>
+    
+  </ul>
+</footer></div>
+</aside>
+      <main
+        
+          class="wrapper__main"
+        
+      >
+        <header class="header"><div
+  class="
+    animated fadeInDown
+  "
+>
+  <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+    <span aria-hidden="true" class="navbar-burger__line"></span>
+    <span aria-hidden="true" class="navbar-burger__line"></span>
+    <span aria-hidden="true" class="navbar-burger__line"></span>
+  </a>
+  <nav class="nav">
+    <ul class="nav__list" id="navMenu">
+      
+      
+        
+        
+          <li class="nav__list-item">
+            
+            <a
+              
+              href="/"
+              
+              title=""
+              >Home</a
+            >
+          </li>
+        
+
+      
+        
+        
+          <li class="nav__list-item">
+            
+            <a
+              
+              href="/post/"
+              
+              title=""
+              >Posts</a
+            >
+          </li>
+        
+
+      
+        
+        
+          <li class="nav__list-item">
+            
+            <a
+              
+              href="/about/"
+              
+              title=""
+              >About</a
+            >
+          </li>
+        
+
+      
+    </ul>
+    <ul class="nav__list nav__list--end">
+      
+      
+    </ul>
+  </nav>
+</div>
+</header>
+  <div
+    class="post 
+      animated fadeInDown
+    "
+  >
+    
+    <div class="post__content">
+      
+        <h1>Fleet-Scale MLOps on Automotive Industry</h1>
+      
+      
+        <ul class="post__meta">
+          <li class="post__meta-item">
+            <em class="fas fa-calendar-day post__meta-icon"></em>
+            <span class="post__meta-text"
+              >
+                
+                  Mon, Jun 1, 2026
+                
+
+              
+            </span>
+          </li>
+          <li class="post__meta-item">
+            <em class="fas fa-stopwatch post__meta-icon"></em>
+            <span class="post__meta-text">읽는 시간 6분</span>
+          </li>
+        </ul>
+      <p>요즘 자동차 업계에서도 AI 이야기가 많습니다. 차량 내 LLM, AI Agent, 운전자 상태 감지, 자율주행 모델, 개인화 기능 같은 주제들이 계속 등장합니다. 다만 그 논의가 종종 “차량에 어떤 AI 기능을 넣을 것인가”에 머무는 것처럼 느껴질 때가 있습니다. 특정 기능을 위해 추론 모델을 개발하자, 기존 기능에 AI 기반 판단 로직을 붙여보자, 차량 내 사용자 경험을 더 똑똑하게 만들어보자 같은 이야기는 비교적 쉽게 나옵니다. 반면 그 모델들이 실제 차량 fleet 위에서 어떻게 관리되고, 검증되고, 개선될 것인지에 대한 논의는 상대적으로 덜 다뤄지는 것처럼 보입니다.</p>
+<p>자동차에서 AI 모델은 한 번 배포하고 끝나는 정적인 소프트웨어 컴포넌트로 보기 어렵습니다. 차량이 달리는 지역도 다르고, ECU 구성도 다르고, 소프트웨어 버전과 캘리브레이션도 계속 바뀝니다. 시간이 지나면 입력 데이터의 분포도 달라지고, 개발 단계에서 보지 못했던 상황도 실제 도로 위에서 계속 쌓입니다. 그래서 모델 하나를 잘 만드는 것만으로는 충분하지 않을 수 있습니다. 운영 중인 모델을 관찰하고, 문제가 되는 상황을 다시 데이터로 회수하고, 그 데이터를 다음 개선에 사용할 수 있는 형태로 정리한 뒤, 개선된 결과를 다시 차량이나 운영 시스템에 반영하는 구조가 함께 필요해집니다. MLOps를 단순히 모델 배포 자동화 정도로 이해하면 자동차 도메인에서는 핵심을 놓치기 쉽습니다. 실제 운영에서 복잡해지는 부분은 모델 그 자체보다 모델 바깥에 있는 경우가 많습니다. 수집한 데이터가 어떤 차량 구성에서 나온 것인지, 해당 차량이 어떤 소프트웨어 버전과 캘리브레이션을 사용하고 있었는지, 학습에 사용한 특징값이 차량 실행 환경에서도 같은 의미로 만들어지는지 같은 문제들이 함께 따라옵니다. 문제가 발생했을 때도 단순히 모델 파일 하나만 보면 충분하지 않을 수 있습니다. 당시 차량의 소프트웨어 구성, 신호 해석 기준, 전처리 규칙, OTA 이력, 진단 정보까지 함께 봐야 원인을 더 잘 추적할 수 있습니다.</p>
+<p>이 복잡성은 자동차 산업에서 MLOps를 어렵게 만드는 요인이지만, 동시에 MLOps가 의미를 가질 수밖에 없는 이유이기도 합니다. 자동차는 애초에 다양한 버전, 설정, 진단 정보, 운행 환경이 함께 얽혀 있는 시스템입니다. 모델을 운영하려면 이런 요소들을 피할 수 없고, 반대로 이 요소들을 잘 연결할 수 있다면 차량에서 발생하는 데이터를 단순 로그가 아니라 지속적인 개선의 재료로 바꿀 수 있습니다. 현대의 차량은 단순한 이동수단이라기보다는 여러 ECU와 센서, 차량 네트워크, 진단 정보, 배터리 상태 정보, 사용자 동작 이벤트가 계속 발생하는 임베디드 분산 시스템에 가깝습니다. 여기에 텔레매틱스와 OTA가 붙으면 차량은 실제 환경에서 데이터를 만들고, 클라우드는 그 데이터를 학습 자산으로 바꾸고, 개선된 소프트웨어나 모델을 다시 차량 또는 운영 시스템에 반영할 수 있습니다. 말하자면 fleet 단위의 학습 루프를 만들 수 있는 재료는 이미 어느 정도 존재합니다. 다만 이런 재료들이 있다고 해서 자동으로 좋은 운영 구조가 만들어지는 것은 아닙니다.</p>
+<p>차량 데이터는 단순히 많이 모은다고 바로 가치가 생기지는 않습니다. 자동차에서는 원시 신호 자체보다 그 신호가 어떤 맥락에서 발생했는지가 훨씬 중요할 때가 많습니다. “차량 데이터를 수집한다”는 말은 간단하지만, 실제로 모든 신호를 높은 주기로 계속 클라우드에 올리는 방식은 현실적으로 부담이 큽니다. 통신량, 저장 비용, 개인정보, 차량 전원 상태, 통신 품질, 사용자 동의, 보안 정책을 함께 고려해야 하기 때문입니다. 그래서 현실적인 접근은 전체 데이터를 무식하게 긁어모으는 방식보다는 이벤트 기반 수집에 가까울 수 있습니다. 예를 들어 진단 이벤트가 발생한 주변 구간, 배터리 온도 이상이 감지된 구간, 운전자 개입 직전과 직후, 충전 실패가 발생한 세션처럼 의미 있는 부분을 잘라서 수집하는 방식이 더 적합할 수 있습니다.</p>
+<p>하지만 이벤트 기반 수집도 단순한 로깅 기능으로 끝나기는 어렵습니다. 어떤 상황을 수집 조건으로 볼 것인지, 이벤트 전후 데이터를 어느 정도 보존할 것인지, 차량 내부에서 어느 수준까지 걸러낼 것인지, 동일한 이벤트가 반복될 때 수집 정책을 어떻게 조정할 것인지 같은 설계가 필요합니다. 그리고 수집된 신호만 올라와서도 충분하지 않습니다. 차종, 지역, ECU 소프트웨어 버전, 캘리브레이션, 신호 사전 버전 같은 정보가 함께 따라와야 합니다. 이 정보가 부족하면 데이터는 쌓이지만 학습 자산으로 활용하기 어려워질 수 있습니다. 데이터 저장소에는 많은 양의 로그가 쌓여 있는데, 정작 모델 학습에 쓰려고 하면 “이 신호가 정확히 어느 차량 구성에서 어떤 의미였지?”라는 질문에 막히는 상황이 생길 수 있습니다. 자동차 MLOps에서 데이터의 맥락과 특징값의 일관성이 중요해지는 이유가 여기에 있습니다.</p>
+<p>이 문제는 예측 정비 같은 영역에서 특히 빨리 드러납니다. 예측 정비는 차량 신호를 많이 모은다고 바로 성립하지 않습니다. 어떤 신호가 어떤 차량 구성에서 나온 것인지, 그 이후 실제 정비나 부품 교체로 이어졌는지, 같은 증상이 반복되었는지까지 연결되어야 합니다. 그래야 특정 패턴이 실제 고장 전조인지, 일시적인 운행 조건의 결과인지 구분할 수 있습니다. 현재 차량 진단은 여전히 규칙 기반 방식에 많이 의존합니다. 특정 전압 이하, 특정 온도 이상, 특정 횟수 초과 같은 조건으로 진단 코드를 발생시키는 방식입니다. 이 방식은 명확하고 검증하기 쉽지만, 고장이 발생하기 전의 미묘한 패턴을 잡아내는 데는 한계가 있을 수 있습니다.</p>
+<p>반대로 fleet 규모로 진단 코드, 당시 차량 상태, 신호 변화, 정비 이력, 보증 청구, 소프트웨어 버전을 함께 연결할 수 있다면 다른 접근도 가능해집니다. 특정 부품이 실제로 교체되기 전부터 반복적으로 나타나는 신호 패턴을 찾거나, 특정 소프트웨어 버전 이후 특정 고장 양상이 증가했는지 확인하는 식의 분석이 가능할 수 있습니다. 다만 여기서도 중요한 것은 모델 구조만이 아닙니다. 진단 코드 발생, 서비스센터의 부품 교체, 보증 청구는 모두 고장과 관련이 있지만 각각의 의미는 다릅니다. 사용자는 불편을 느꼈지만 진단 코드는 없을 수 있고, 진단 코드는 발생했지만 실제 부품 결함은 아닐 수도 있습니다. 부품 교체도 항상 정확한 정답이라고 보기 어렵습니다. 예방적으로 교체되었을 수도 있고, 동일 증상으로 여러 번 방문한 뒤에야 실제 원인이 확인되는 경우도 있습니다. 이런 상황에서는 고장 여부를 표시하는 기준 자체가 지연되거나 흔들릴 수 있고, 그 불확실성이 모델 성능 해석에도 반영될 수 있습니다. 전기차 배터리 데이터도 비슷한 관점에서 볼 수 있습니다. 충전 패턴, 셀 전압 편차, 열 관리 상태, 급속 충전 빈도, 외기 온도, 차량 사용 패턴 같은 데이터는 장기간 누적될수록 제품 분석이나 품질 모니터링에 활용될 여지가 커집니다. 다만 여기서도 핵심은 모델 자체보다 데이터의 맥락입니다. 어떤 차량 구성과 캘리브레이션에서 나온 데이터인지가 정리되지 않으면, 배터리 열화 패턴처럼 보이는 현상이 실제로는 특정 사용 조건이나 소프트웨어 버전의 영향일 수도 있습니다. 결국 배터리 분석이든 예측 정비든, 자동차 AI의 많은 문제는 모델 선택 이전에 데이터가 어떤 의미를 갖는지 정리하는 문제와 맞닿아 있습니다.</p>
+<p>이 때문에 자동차 MLOps는 AI 팀 내부의 도구만으로 끝나기 어렵습니다. 차량 데이터의 의미는 모델 저장소 안에 있는 것이 아니라 신호 사전, 캘리브레이션, 진단 정책, 정비 이력, OTA 이력 같은 여러 맥락 속에 흩어져 있습니다. 같은 이름의 신호라도 차량 구성이나 소프트웨어 버전에 따라 의미가 달라질 수 있고, 모델이 학습한 입력값과 실제 차량에서 생성되는 입력값이 어긋날 수도 있습니다. 결국 자동차에서 모델을 운영한다는 것은 모델 파일을 관리하는 일이라기보다, 데이터가 발생한 조건과 그 데이터를 해석하는 기준을 함께 관리하는 일에 가깝습니다. 그래서 자동차 산업에서 MLOps를 이야기할 때는 출발점이 조금 달라져야 한다고 생각합니다. 어떤 모델을 넣을지보다, 그 모델이 신뢰할 수 있는 데이터를 지속적으로 받을 수 있는지가 먼저입니다. 모델의 성능 수치보다, 그 성능을 만든 데이터와 실제 차량에서 들어오는 데이터가 같은 의미를 갖는지가 더 중요할 때도 있습니다. 이 부분이 정리되지 않으면 PoC에서는 그럴듯한 결과가 나오더라도, 실제 fleet으로 확장되는 순간 모델의 결과를 해석하거나 문제를 추적하기 어려워질 수 있습니다. 이 구조가 부족한 상태에서 AI 기능만 추가하면 겉으로는 AI를 하는 것처럼 보일 수 있습니다. 하지만 시간이 지나면 모델은 낡고, 데이터는 흩어지고, 운영 문제는 추적하기 어려워질 가능성이 있습니다. 처음에는 PoC가 잘 되는 것처럼 보여도 실제 fleet으로 확장되는 순간 복잡도가 크게 증가할 수 있습니다. 반대로 이 루프를 제대로 만들 수 있다면 자동차 산업은 AI 시대에 꽤 강력한 위치를 가질 수 있습니다. 수많은 차량이 실제 환경에서 데이터를 만들고, OTA를 통해 소프트웨어를 갱신할 수 있고, 진단 데이터와 정비 이력까지 연결할 수 있는 산업은 많지 않습니다.</p>
+<p>자동차에서 AI를 제품 기능으로만 보면 모델을 하나 더 붙이는 문제로 보입니다. 하지만 차량을 실제 환경에서 계속 데이터를 만들고, 그 데이터가 다시 품질과 소프트웨어 개선으로 돌아오는 시스템으로 보면 이야기가 달라집니다. 이때 중요한 것은 특정 모델의 성능 하나가 아니라, 차량에서 발생한 문제를 다시 학습 가능한 데이터로 바꾸고, 그 결과를 다시 제품에 반영할 수 있는 운영 능력입니다. 자동차 산업에서 AI가 장기적인 경쟁력이 되려면 이 관점이 점점 더 중요해질 것이라고 생각합니다. MLOps는 단순한 AI 개발 도구라기보다, 앞으로 자동차 제품을 운영하는 방식과 더 가까워질 수 있습니다. 차량, 데이터, 모델, OTA, 진단, 품질을 하나의 생애주기로 묶을 수 있는지, fleet에서 발생한 실제 문제를 다시 학습 가능한 데이터로 바꾸고 그 결과를 제품 개선으로 연결할 수 있는지가 중요한 기준이 될 것 같습니다.</p>
+</div>
+    <div class="post__footer">
+      
+
+      
+    </div>
+
+    
+  </div>
+
+      </main>
+    </div><footer class="footer footer__base">
+  <ul
+    class="footer__list 
+      animated fadeInDown
+    "
+  >
+    <li class="footer__item">
+      &copy;
+      
+        Minwoo Lee
+        2026
+      
+    </li>
+    
+  </ul>
+</footer></body>
+</html>
