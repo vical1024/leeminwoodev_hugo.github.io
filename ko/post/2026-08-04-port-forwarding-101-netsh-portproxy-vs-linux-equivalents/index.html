@@ -1,0 +1,589 @@
+<!doctype html>
+<html
+  dir="ltr"
+  lang="ko"
+  data-theme=""
+  
+    class="html theme--light"
+  
+><head>
+  <meta charset="utf-8" /><title>
+    Minwoo Lee
+        |
+        Port Forwarding 101: `netsh portproxy` vs Linux Equivalents
+      
+
+    
+
+  </title>
+
+  <meta name="generator" content="Hugo 0.159.2"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="author" content="Minwoo Lee" />
+  <meta
+    name="description"
+    content="Developer
+C, C&#43;&#43;, Python, Go, Rust, Linux, Yocto
+Mainly works in automotive industry
+"
+  />
+  
+  
+        <link rel="stylesheet" href="/css/anatole.min.c6dc8a0ff11f3f809388b7a1c6efacfc9f94cde542f6c3c5914e06ed87851fa3.css" integrity="sha256-xtyKD/EfP4CTiLehxu&#43;s/J&#43;UzeVC9sPFkU4G7YeFH6M=" crossorigin="anonymous" />
+      
+  <link
+    rel="stylesheet"
+    href="/css/markupHighlight.min.f8ba48d3fd92c731701d9634494275b2f2bc2ad0bea19b438feb41b25052f83b.css"
+    integrity="sha256-&#43;LpI0/2SxzFwHZY0SUJ1svK8KtC&#43;oZtDj&#43;tBslBS&#43;Ds="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+    
+    
+    <link
+      rel="stylesheet"
+      href="/css/syntax.min.e5729af38e6b50ee0002cdac6e7f72e57e13bc01c7165fad09a9bf691a1b0dbf.css"
+      integrity="sha256-5XKa845rUO4AAs2sbn9y5X4TvAHHFl&#43;tCam/aRobDb8="
+      crossorigin="anonymous"
+      media="screen"
+    />
+  
+  
+  <link
+    rel="stylesheet"
+    href="/fontawesome/css/fontawesome.min.137b1cf3cea9a8adb7884343a9a5ddddf4280f59153f74dc782fb7f7bf0d0519.css"
+    integrity="sha256-E3sc886pqK23iENDqaXd3fQoD1kVP3TceC&#43;3978NBRk="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  <link
+    rel="stylesheet"
+    href="/fontawesome/css/solid.min.e65dc5b48fb5f39b142360c57c3a215744c94e56c755c929cc3e88fe12aab4d3.css"
+    integrity="sha256-5l3FtI&#43;185sUI2DFfDohV0TJTlbHVckpzD6I/hKqtNM="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  <link
+    rel="stylesheet"
+    href="/fontawesome/css/regular.min.6f4f16d58da1c82c0c3a3436e021a3d39b4742f741192c546e73e947eacfd92f.css"
+    integrity="sha256-b08W1Y2hyCwMOjQ24CGj05tHQvdBGSxUbnPpR&#43;rP2S8="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  <link
+    rel="stylesheet"
+    href="/fontawesome/css/brands.min.e10425ad768bc98ff1fb272a0ac8420f9d1ba22f0612c08ff1010c95080ffe7e.css"
+    integrity="sha256-4QQlrXaLyY/x&#43;ycqCshCD50boi8GEsCP8QEMlQgP/n4="
+    crossorigin="anonymous"
+    type="text/css"
+  />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+  <link rel="canonical" href="https://blog.leeminwoo.dev/ko/post/2026-08-04-port-forwarding-101-netsh-portproxy-vs-linux-equivalents/" />
+  
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/anatole-header.min.f9132794301a01ff16550ed66763482bd848f62243d278f5e550229a158bfd32.js"
+    integrity="sha256-&#43;RMnlDAaAf8WVQ7WZ2NIK9hI9iJD0nj15VAimhWL/TI="
+    crossorigin="anonymous"
+  ></script>
+
+  
+
+  
+
+  
+
+  
+
+
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Port Forwarding 101: `netsh portproxy` vs Linux Equivalents">
+  <meta name="twitter:description" content="# Port Forwarding 101: `netsh portproxy` vs Linux Equivalents 최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(`172.16.10.22`)과 보드망(`192.168.0.x`)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 `netsh interface portproxy`로 SSH 점프 포인트를 하나 만들었습니다. ```text &gt; netsh interface portproxy show all Listen on ipv4: Connect to ipv4: Address Port Address Port --------------- ---------- --------------- ---------- 172.16.10.22 2222 192.168.0.10 22 이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(172.16.10.22)의 2222 포트로만 SSH하면 연결된 보드(192.168.0.10:22)로 바로 들어갈 수 있게 만들 수 있었습니다. 172.16.10.22:2222로 들어온 트래픽을 192.168.0.10:22로 넘기는 룰입니다. portproxy 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.">
+
+
+
+  
+  <meta property="og:url" content="https://blog.leeminwoo.dev/ko/post/2026-08-04-port-forwarding-101-netsh-portproxy-vs-linux-equivalents/">
+  <meta property="og:site_name" content="Minwoo Lee">
+  <meta property="og:title" content="Port Forwarding 101: `netsh portproxy` vs Linux Equivalents">
+  <meta property="og:description" content="# Port Forwarding 101: `netsh portproxy` vs Linux Equivalents 최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(`172.16.10.22`)과 보드망(`192.168.0.x`)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 `netsh interface portproxy`로 SSH 점프 포인트를 하나 만들었습니다. ```text &gt; netsh interface portproxy show all Listen on ipv4: Connect to ipv4: Address Port Address Port --------------- ---------- --------------- ---------- 172.16.10.22 2222 192.168.0.10 22 이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(172.16.10.22)의 2222 포트로만 SSH하면 연결된 보드(192.168.0.10:22)로 바로 들어갈 수 있게 만들 수 있었습니다. 172.16.10.22:2222로 들어온 트래픽을 192.168.0.10:22로 넘기는 룰입니다. portproxy 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.">
+  <meta property="og:locale" content="ko">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2026-08-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-08-04T00:00:00+00:00">
+
+
+
+  
+  
+  <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "articleSection": "post",
+        "name": "Port Forwarding 101: \u0060netsh portproxy\u0060 vs Linux Equivalents",
+        "headline": "Port Forwarding 101: \u0060netsh portproxy\u0060 vs Linux Equivalents",
+        "alternativeHeadline": "",
+        "description": "
+      
+        \u003cdiv class=\u0022highlight\u0022\u003e\u003cpre tabindex=\u00220\u0022 style=\u0022color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;\u0022\u003e\u003ccode class=\u0022language-markdown\u0022 data-lang=\u0022markdown\u0022\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e# Port Forwarding 101: \u0060netsh portproxy\u0060 vs Linux Equivalents\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(\u003cspan style=\u0022color:#e6db74\u0022\u003e\u0060172.16.10.22\u0060\u003c\/span\u003e)과 보드망(\u003cspan style=\u0022color:#e6db74\u0022\u003e\u0060192.168.0.x\u0060\u003c\/span\u003e)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 \u003cspan style=\u0022color:#e6db74\u0022\u003e\u0060netsh interface portproxy\u0060\u003c\/span\u003e로 SSH 점프 포인트를 하나 만들었습니다.\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\u0060\u0060\u0060text\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\u003cspan style=\u0022color:#66d9ef\u0022\u003e\u0026gt; \u003c\/span\u003e\u003cspan style=\u0022font-style:italic\u0022\u003enetsh interface portproxy show all\n\u003c\/span\u003e\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003eListen on ipv4:             Connect to ipv4:\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003eAddress         Port        Address         Port\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e--------------- ----------  --------------- ----------\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e172.16.10.22    2222        192.168.0.10    22\n\u003c\/span\u003e\u003c\/span\u003e\u003c\/code\u003e\u003c\/pre\u003e\u003c\/div\u003e\u003cp\u003e이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(\u003ccode\u003e172.16.10.22\u003c\/code\u003e)의 2222 포트로만 SSH하면 연결된 보드(\u003ccode\u003e192.168.0.10:22\u003c\/code\u003e)로 바로 들어갈 수 있게 만들 수 있었습니다. \u003ccode\u003e172.16.10.22:2222\u003c\/code\u003e로 들어온 트래픽을 \u003ccode\u003e192.168.0.10:22\u003c\/code\u003e로 넘기는 룰입니다. \u003ccode\u003eportproxy\u003c\/code\u003e 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.\u003c\/p\u003e
+
+
+      
+
+
+    ",
+        "license": "",
+        
+        "inLanguage": "ko",
+        "isFamilyFriendly": "true",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/blog.leeminwoo.dev\/ko\/post\/2026-08-04-port-forwarding-101-netsh-portproxy-vs-linux-equivalents\/"
+        },
+        "author" : {
+            "@type": "Person",
+            "name": "Minwoo Lee"
+        },
+        "creator" : {
+            "@type": "Person",
+            "name": "Minwoo Lee"
+        },
+        "accountablePerson" : {
+            "@type": "Person",
+            "name": "Minwoo Lee"
+        },
+        "copyrightHolder" : {
+            "@type": "Person",
+            "name": "Minwoo Lee"
+        },
+        "dateCreated": "2026-08-04T00:00:00.00Z",
+        "datePublished": "2026-08-04T00:00:00.00Z",
+        "dateModified": "2026-08-04T00:00:00.00Z",
+        "publisher":{
+            "@type":"Organization",
+            "name": "Minwoo Lee",
+            "url": "https://blog.leeminwoo.dev/",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/blog.leeminwoo.dev\/favicon-32x32.png",
+                "width":"32",
+                "height":"32"
+            }
+        },
+        "image": 
+      [
+      ]
+
+    ,
+        "url" : "https:\/\/blog.leeminwoo.dev\/ko\/post\/2026-08-04-port-forwarding-101-netsh-portproxy-vs-linux-equivalents\/",
+        "wordCount" : "786",
+        "genre" : [ ],
+        "keywords" : [ ]
+    }
+  </script>
+
+
+
+
+  
+  
+  
+</head>
+<body class="body">
+    <div class="wrapper">
+      <aside
+        
+          class="wrapper__sidebar"
+        
+      ><div class="sidebar">
+  <div
+    class="sidebar__content 
+      animated fadeInDown
+    "
+  >
+    <div class="sidebar__introduction">
+      <img
+        class="sidebar__introduction-profileimage"
+        src="/profile-image/profile.jpg"
+        alt="profile picture"
+      />
+      
+        <div class="sidebar__introduction-title">
+          <a href="/ko">Minwoo Lee</a>
+        </div>
+      
+      <div class="sidebar__introduction-description">
+        <p>Developer<br />C, C++, Python, Go, Rust, Linux, Yocto<br />Mainly works in automotive industry<br /></p>
+      </div>
+    </div>
+    <ul class="sidebar__list">
+      
+        <li class="sidebar__list-item">
+          <a
+            href="https://www.linkedin.com/in/85minwoolee"
+            target="_blank"
+            rel="noopener me"
+            aria-label="Linkedin"
+            title="Linkedin"
+          >
+            <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+      
+        <li class="sidebar__list-item">
+          <a
+            href="https://github.com/vical1024"
+            target="_blank"
+            rel="noopener me"
+            aria-label="GitHub"
+            title="GitHub"
+          >
+            <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+      
+        <li class="sidebar__list-item">
+          <a
+            href="mailto:vical1024@gmail.com"
+            target="_blank"
+            rel="noopener me"
+            aria-label="e-mail"
+            title="e-mail"
+          >
+            <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div><footer class="footer footer__sidebar">
+  <ul
+    class="footer__list 
+      animated fadeInDown
+    "
+  >
+    <li class="footer__item">
+      &copy;
+      
+        Minwoo Lee
+        2026
+      
+    </li>
+    
+  </ul>
+</footer></div>
+</aside>
+      <main
+        
+          class="wrapper__main"
+        
+      >
+        <header class="header"><div
+  class="
+    animated fadeInDown
+  "
+>
+  <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+    <span aria-hidden="true" class="navbar-burger__line"></span>
+    <span aria-hidden="true" class="navbar-burger__line"></span>
+    <span aria-hidden="true" class="navbar-burger__line"></span>
+  </a>
+  <nav class="nav">
+    <ul class="nav__list" id="navMenu">
+      
+      
+        
+        
+          <li class="nav__list-item">
+            
+            <a
+              
+              href="/"
+              
+              title=""
+              >Home</a
+            >
+          </li>
+        
+
+      
+        
+        
+          <li class="nav__list-item">
+            
+            <a
+              
+              href="/post/"
+              
+              title=""
+              >Posts</a
+            >
+          </li>
+        
+
+      
+        
+        
+          <li class="nav__list-item">
+            
+            <a
+              
+              href="/about/"
+              
+              title=""
+              >About</a
+            >
+          </li>
+        
+
+      
+    </ul>
+    <ul class="nav__list nav__list--end">
+      
+      
+    </ul>
+  </nav>
+</div>
+</header>
+  <div
+    class="post 
+      animated fadeInDown
+    "
+  >
+    
+    <div class="post__content">
+      
+        <h1>Port Forwarding 101: `Netsh Portproxy` vs Linux Equivalents</h1>
+      
+      
+        <ul class="post__meta">
+          <li class="post__meta-item">
+            <em class="fas fa-calendar-day post__meta-icon"></em>
+            <span class="post__meta-text"
+              >
+                
+                  Tue, Aug 4, 2026
+                
+
+              
+            </span>
+          </li>
+          <li class="post__meta-item">
+            <em class="fas fa-stopwatch post__meta-icon"></em>
+            <span class="post__meta-text">읽는 시간 4분</span>
+          </li>
+        </ul>
+      <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># Port Forwarding 101: `netsh portproxy` vs Linux Equivalents
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(<span style="color:#e6db74">`172.16.10.22`</span>)과 보드망(<span style="color:#e6db74">`192.168.0.x`</span>)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 <span style="color:#e6db74">`netsh interface portproxy`</span>로 SSH 점프 포인트를 하나 만들었습니다.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>```text
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">&gt; </span><span style="font-style:italic">netsh interface portproxy show all
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Listen on ipv4:             Connect to ipv4:
+</span></span><span style="display:flex;"><span>Address         Port        Address         Port
+</span></span><span style="display:flex;"><span>--------------- ----------  --------------- ----------
+</span></span><span style="display:flex;"><span>172.16.10.22    2222        192.168.0.10    22
+</span></span></code></pre></div><p>이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(<code>172.16.10.22</code>)의 2222 포트로만 SSH하면 연결된 보드(<code>192.168.0.10:22</code>)로 바로 들어갈 수 있게 만들 수 있었습니다. <code>172.16.10.22:2222</code>로 들어온 트래픽을 <code>192.168.0.10:22</code>로 넘기는 룰입니다. <code>portproxy</code> 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.</p>
+<hr>
+<h2 id="1-netsh-portproxy가-실제로-하는-일">1. <code>netsh portproxy</code>가 실제로 하는 일</h2>
+<p>처음 이를 셋업하고 사용하고 있을때는 이게 커널 라우팅으로 동작하는 줄 으례 짐작했습니다. 그런데 막상 자세히 공부해 보니 라우팅이 아니라 user-mode L4 relay였습니다. 커널이 패킷을 고쳐서 넘기는 게 아니라, <code>iphlpsvc</code>(IP Helper) 서비스가 TCP 소켓 두 개를 열어두고 그 사이 바이트를 그대로 복사하는(pump) 방식이었습니다.
+동작 순서는 이렇습니다.</p>
+<ol>
+<li><code>iphlpsvc</code>가 <code>172.16.10.22:2222</code>에 리스닝 소켓을 bind합니다</li>
+<li>클라이언트가 접속하면 iphlpsvc가 <strong>새 소켓</strong>을 열어 <code>192.168.0.10:22</code>로 접속합니다</li>
+<li>두 소켓 사이 데이터를 그대로 복사합니다. 클라이언트 눈에는 연결 하나로 보이지만, 실제로는 서로 다른 TCP 연결 두 개입니다</li>
+</ol>
+<div class="mermaid">sequenceDiagram
+    participant C as Client
+    participant W as Windows Host<br/>172.16.10.22<br/>(iphlpsvc / netsh portproxy)
+    participant T as Target<br/>192.168.0.10:22 (sshd)
+
+    C->>W: TCP connect 172.16.10.22:2222
+    W->>T: new TCP connect 192.168.0.10:22
+    Note over W: two independent sockets,<br/>byte-copy relay in user space
+    C-->>T: application data flows through the relay
+</div>
+
+<p><img src="diagram-windows-portproxy.svg" alt="Windows netsh portproxy relay diagram"></p>
+<p>이 구조를 이해하고 나니 왜 처음에 안 됐는지도 보였습니다. 아래 항목들이 갖춰져 있어야 합니다.</p>
+<table>
+  <thead>
+      <tr>
+          <th>체크포인트</th>
+          <th>왜 필요한가</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>iphlpsvc</code> 서비스 실행 (<code>net start iphlpsvc</code>)</td>
+          <td><code>portproxy</code> 룰이 이 서비스에 종속돼 있습니다</td>
+      </tr>
+      <tr>
+          <td>listen 주소(<code>172.16.10.22</code>)가 이 머신의 실제 NIC IP</td>
+          <td><code>bind()</code>는 로컬 인터페이스에만 걸립니다. 아니면 리스닝 자체가 실패합니다</td>
+      </tr>
+      <tr>
+          <td>방화벽 인바운드 허용 (TCP 2222, 올바른 프로파일)</td>
+          <td><code>New-NetFirewallRule -Direction Inbound -Protocol TCP -LocalPort 2222 -Action Allow</code></td>
+      </tr>
+      <tr>
+          <td><code>192.168.0.10</code>으로 가는 라우팅</td>
+          <td>대상 서브넷에 물려있는 NIC나 라우트가 있어야 두 번째 소켓 연결이 성공합니다</td>
+      </tr>
+  </tbody>
+</table>
+<p><code>IPEnableRouter</code>(커널 라우팅 플래그)는 건드릴 필요가 없었습니다. <code>portproxy</code>는 라우터가 아니라 소켓 릴레이 프록시이기 때문입니다.</p>
+<hr>
+<h2 id="2-linux에서도-되는지-확인--방식-a-socat-같은-개념의-user-space-relay">2. Linux에서도 되는지 확인 — 방식 A: <code>socat</code> (같은 개념의 user-space relay)</h2>
+<p><code>netsh portproxy</code>와 가장 가까운 건 <code>socat</code>이었습니다. 커널 포워딩이나 iptables 없이, 프로세스 하나가 소켓 두 개를 릴레이해줍니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>socat TCP-LISTEN:2222,bind<span style="color:#f92672">=</span>172.16.10.22,fork,reuseaddr TCP:192.168.0.10:22
+</span></span></code></pre></div><div class="mermaid">sequenceDiagram
+    participant C as Client
+    participant L as Linux Host<br/>172.16.10.22<br/>(socat process)
+    participant T as Target<br/>192.168.0.10:22 (sshd)
+
+    C->>L: TCP connect 172.16.10.22:2222
+    L->>T: new TCP connect 192.168.0.10:22
+    Note over L: same relay concept as netsh portproxy —<br/>no ip_forward, no iptables needed
+    C-->>T: application data flows through the relay
+</div>
+
+<p><img src="diagram-linux-socat.svg" alt="Linux socat relay diagram"></p>
+<p>S32G274A 같은 임베디드 리눅스 보드에서 상시로 띄워야 한다면 systemd unit 하나만 만들면 됐습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># /etc/systemd/system/ssh-portproxy.service</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[Unit]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Description</span><span style="color:#f92672">=</span><span style="color:#e6db74">SSH port relay 172.16.10.22:2222 -&gt; 192.168.0.10:22</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">After</span><span style="color:#f92672">=</span><span style="color:#e6db74">network-online.target</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Wants</span><span style="color:#f92672">=</span><span style="color:#e6db74">network-online.target</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[Service]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ExecStart</span><span style="color:#f92672">=</span><span style="color:#e6db74">/usr/bin/socat TCP-LISTEN:2222,bind=172.16.10.22,fork,reuseaddr TCP:192.168.0.10:22</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Restart</span><span style="color:#f92672">=</span><span style="color:#e6db74">on-failure</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[Install]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">WantedBy</span><span style="color:#f92672">=</span><span style="color:#e6db74">multi-user.target</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>systemctl daemon-reload
+</span></span><span style="display:flex;"><span>systemctl enable --now ssh-portproxy
+</span></span></code></pre></div><p><code>ssh -L</code>/<code>-R</code> 포트포워딩도 같은 계열(user-space relay)이지만, SSH 세션이 끊기면 같이 죽습니다. 상시 서비스라면 <code>socat</code> + systemd가 더 맞았습니다.</p>
+<hr>
+<h2 id="3-linux-방식-b-iptablesnftables-dnat-커널-레벨-포워딩">3. Linux 방식 B: <code>iptables</code>/<code>nftables</code> DNAT (커널 레벨 포워딩)</h2>
+<p>추가로 확인한 방식인데, <code>netsh portproxy</code>보다는 실제 NAT 라우터에 가까웠습니다. 새 소켓을 만드는 게 아니라 커널이 패킷의 목적지 주소/포트를 그 자리에서 고쳐서(rewrite) 그대로 넘깁니다. 클라이언트와 타겟 사이가 하나의 연속된 TCP 연결이라는 점이 앞의 방식과 가장 큰 차이였습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 커널 포워딩 활성화 (필수)</span>
+</span></span><span style="display:flex;"><span>sysctl -w net.ipv4.ip_forward<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># PREROUTING: 목적지를 실제 타겟으로 재작성</span>
+</span></span><span style="display:flex;"><span>iptables -t nat -A PREROUTING -p tcp -d 172.16.10.22 --dport <span style="color:#ae81ff">2222</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -j DNAT --to-destination 192.168.0.10:22
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># FORWARD: 재작성된 패킷이 지나가도록 허용</span>
+</span></span><span style="display:flex;"><span>iptables -A FORWARD -p tcp -d 192.168.0.10 --dport <span style="color:#ae81ff">22</span> -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># POSTROUTING: 리턴 트래픽이 제대로 돌아오게 하려면 (라우팅 구조에 따라 필요)</span>
+</span></span><span style="display:flex;"><span>iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.10 --dport <span style="color:#ae81ff">22</span> -j MASQUERADE
+</span></span></code></pre></div><div class="mermaid">flowchart LR
+    C[Client] -->|"dst=172.16.10.22:2222"| P["PREROUTING / DNAT<br/>dst → 192.168.0.10:22"]
+    P --> F["FORWARD chain<br/>net.ipv4.ip_forward=1"]
+    F --> M["POSTROUTING / MASQUERADE<br/>(조건부)"]
+    M -->|"same conn, header rewritten"| T[Target 192.168.0.10:22]
+    T -.->|"return traffic, rewritten again"| C
+</div>
+
+<p><img src="diagram-linux-iptables-dnat.svg" alt="Linux iptables DNAT diagram"></p>
+<p><code>MASQUERADE</code>는 매번 필요하진 않았습니다. 타겟(<code>192.168.0.10</code>)이 리턴 패킷을 다시 이 라우터로 보낼 수 있는 구조(예: 기본 게이트웨이가 이 라우터)라면 생략해도 됩니다. 확실하지 않으면 넣어 두는 편이 안전했습니다.</p>
+<hr>
+<h2 id="4-한눈에-비교">4. 한눈에 비교</h2>
+<table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>netsh portproxy (Windows)</th>
+          <th>socat (Linux)</th>
+          <th>iptables DNAT (Linux)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>계층</td>
+          <td>User-space, L4 소켓 릴레이</td>
+          <td>User-space, L4 소켓 릴레이</td>
+          <td>커널, 패킷 레벨 NAT</td>
+      </tr>
+      <tr>
+          <td>TCP 연결 개수</td>
+          <td>2개 (독립)</td>
+          <td>2개 (독립)</td>
+          <td>1개 (헤더만 재작성)</td>
+      </tr>
+      <tr>
+          <td><code>ip_forward</code> 필요?</td>
+          <td>불필요</td>
+          <td>불필요</td>
+          <td><strong>필요</strong></td>
+      </tr>
+      <tr>
+          <td>리스닝 IP 요건</td>
+          <td>로컬 NIC에 bind된 실제 IP</td>
+          <td>로컬 NIC에 bind된 실제 IP</td>
+          <td>없음 (패킷 가로채기라 bind 불필요)</td>
+      </tr>
+      <tr>
+          <td>적합한 상황</td>
+          <td>단일 서비스 점프/릴레이</td>
+          <td>단일 서비스 점프/릴레이, 데몬화 쉬움</td>
+          <td>여러 포트/서비스를 라우터처럼 통째로 포워딩</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="5-트러블슈팅-체크리스트">5. 트러블슈팅 체크리스트</h2>
+<p>작업하면서 안 될 때마다 아래 순서대로 확인했습니다.</p>
+<ol>
+<li>리스닝이 실제로 떠 있는지 — <code>netstat -an | findstr 2222</code> 또는 <code>Get-NetTCPConnection -LocalPort 2222</code> (Windows) / <code>ss -tlnp | grep 2222</code> (Linux)</li>
+<li>방화벽이 해당 포트/프로파일을 막고 있는지</li>
+<li>릴레이 호스트에서 타겟으로 라우팅이 되는지 — <code>ping 192.168.0.10</code>, <code>route print</code> / <code>ip route</code></li>
+<li>(iptables DNAT만) <code>net.ipv4.ip_forward</code>가 1인지, 리턴 경로에 <code>MASQUERADE</code>가 필요한 구조인지</li>
+<li>클라이언트 쪽에서 <code>Test-NetConnection 172.16.10.22 -Port 2222</code> 또는 <code>nc -zv 172.16.10.22 2222</code>로 최종 확인</li>
+</ol>
+<pre tabindex="0"><code></code></pre></div>
+    <div class="post__footer">
+      
+
+      
+    </div>
+
+    
+  </div>
+
+      </main>
+    </div><footer class="footer footer__base">
+  <ul
+    class="footer__list 
+      animated fadeInDown
+    "
+  >
+    <li class="footer__item">
+      &copy;
+      
+        Minwoo Lee
+        2026
+      
+    </li>
+    
+  </ul>
+</footer></body>
+</html>

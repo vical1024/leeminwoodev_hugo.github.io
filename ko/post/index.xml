@@ -6,7 +6,29 @@
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ko</language>
-    <lastBuildDate>Mon, 01 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.leeminwoo.dev/ko/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 04 Aug 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.leeminwoo.dev/ko/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Port Forwarding 101: `netsh portproxy` vs Linux Equivalents</title>
+      <link>https://blog.leeminwoo.dev/ko/post/2026-08-04-port-forwarding-101-netsh-portproxy-vs-linux-equivalents/</link>
+      <pubDate>Tue, 04 Aug 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.leeminwoo.dev/ko/post/2026-08-04-port-forwarding-101-netsh-portproxy-vs-linux-equivalents/</guid>
+      
+        <description>&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# Port Forwarding 101: `netsh portproxy` vs Linux Equivalents
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(&lt;span style=&#34;color:#e6db74&#34;&gt;`172.16.10.22`&lt;/span&gt;)과 보드망(&lt;span style=&#34;color:#e6db74&#34;&gt;`192.168.0.x`&lt;/span&gt;)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 &lt;span style=&#34;color:#e6db74&#34;&gt;`netsh interface portproxy`&lt;/span&gt;로 SSH 점프 포인트를 하나 만들었습니다.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;```text
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;gt; &lt;/span&gt;&lt;span style=&#34;font-style:italic&#34;&gt;netsh interface portproxy show all
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Listen on ipv4:             Connect to ipv4:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Address         Port        Address         Port
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;--------------- ----------  --------------- ----------
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;172.16.10.22    2222        192.168.0.10    22
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(&lt;code&gt;172.16.10.22&lt;/code&gt;)의 2222 포트로만 SSH하면 연결된 보드(&lt;code&gt;192.168.0.10:22&lt;/code&gt;)로 바로 들어갈 수 있게 만들 수 있었습니다. &lt;code&gt;172.16.10.22:2222&lt;/code&gt;로 들어온 트래픽을 &lt;code&gt;192.168.0.10:22&lt;/code&gt;로 넘기는 룰입니다. &lt;code&gt;portproxy&lt;/code&gt; 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>Fleet-scale MLOps on Automotive industry</title>
       <link>https://blog.leeminwoo.dev/ko/post/2026-06-01-fleet-scale-mlops-on-automotive-industry/</link>
