@@ -1,0 +1,34 @@
+<svg width="860" height="240" viewBox="0 0 860 240" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#334155"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="240" fill="#ffffff"/>
+
+  <rect x="30" y="80" width="150" height="70" rx="8" fill="#eef2ff" stroke="#4338ca" stroke-width="1.5"/>
+  <text x="105" y="108" text-anchor="middle" font-size="14" font-weight="bold" fill="#312e81">Client</text>
+  <text x="105" y="128" text-anchor="middle" font-size="11" fill="#4338ca">ssh -p 2222 host</text>
+
+  <rect x="330" y="35" width="210" height="150" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="1.5"/>
+  <text x="435" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#7c2d12">Windows Host</text>
+  <text x="435" y="85" text-anchor="middle" font-size="11" fill="#9a3412">172.16.10.22</text>
+  <text x="435" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#9a3412">iphlpsvc</text>
+  <text x="435" y="128" text-anchor="middle" font-size="11" fill="#9a3412">netsh portproxy</text>
+  <text x="435" y="150" text-anchor="middle" font-size="10" fill="#9a3412">(listen socket)</text>
+  <text x="435" y="166" text-anchor="middle" font-size="10" fill="#9a3412">bound to 172.16.10.22:2222</text>
+
+  <rect x="680" y="80" width="150" height="70" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1.5"/>
+  <text x="755" y="108" text-anchor="middle" font-size="14" font-weight="bold" fill="#065f46">Target</text>
+  <text x="755" y="128" text-anchor="middle" font-size="11" fill="#047857">192.168.0.10:22 (sshd)</text>
+
+  <line x1="180" y1="112" x2="330" y2="112" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow1)"/>
+  <text x="255" y="98" text-anchor="middle" font-size="10" fill="#334155">TCP → 172.16.10.22:2222</text>
+
+  <line x1="540" y1="112" x2="680" y2="112" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow1)"/>
+  <text x="610" y="98" text-anchor="middle" font-size="10" fill="#334155">new socket →</text>
+  <text x="610" y="132" text-anchor="middle" font-size="10" fill="#334155">192.168.0.10:22</text>
+
+  <text x="430" y="215" text-anchor="middle" font-size="11" fill="#475569">Two independent TCP sockets, byte-copy relay in user space.</text>
+  <text x="430" y="231" text-anchor="middle" font-size="11" fill="#475569">No kernel routing / IPEnableRouter needed — only iphlpsvc + firewall + local bind.</text>
+</svg>
