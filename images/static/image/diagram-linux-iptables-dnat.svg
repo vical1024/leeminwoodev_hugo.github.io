@@ -1,0 +1,47 @@
+<svg width="900" height="300" viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrow3d" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="300" fill="#ffffff"/>
+
+  <rect x="20" y="95" width="150" height="70" rx="8" fill="#eef2ff" stroke="#4338ca" stroke-width="1.5"/>
+  <text x="95" y="123" text-anchor="middle" font-size="14" font-weight="bold" fill="#312e81">Client</text>
+  <text x="95" y="143" text-anchor="middle" font-size="11" fill="#4338ca">ssh -p 2222 host</text>
+
+  <rect x="300" y="30" width="270" height="200" rx="8" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.5"/>
+  <text x="435" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#7f1d1d">Linux Router (172.16.10.22)</text>
+
+  <rect x="315" y="65" width="240" height="45" rx="6" fill="#fee2e2" stroke="#b91c1c"/>
+  <text x="435" y="83" text-anchor="middle" font-size="11" font-weight="bold" fill="#7f1d1d">PREROUTING / DNAT</text>
+  <text x="435" y="99" text-anchor="middle" font-size="10" fill="#7f1d1d">dst → 192.168.0.10:22</text>
+
+  <rect x="315" y="118" width="240" height="45" rx="6" fill="#fee2e2" stroke="#b91c1c"/>
+  <text x="435" y="136" text-anchor="middle" font-size="11" font-weight="bold" fill="#7f1d1d">FORWARD chain</text>
+  <text x="435" y="152" text-anchor="middle" font-size="10" fill="#7f1d1d">net.ipv4.ip_forward = 1</text>
+
+  <rect x="315" y="171" width="240" height="45" rx="6" fill="#fee2e2" stroke="#b91c1c"/>
+  <text x="435" y="189" text-anchor="middle" font-size="11" font-weight="bold" fill="#7f1d1d">POSTROUTING / MASQUERADE</text>
+  <text x="435" y="205" text-anchor="middle" font-size="10" fill="#7f1d1d">(only if needed for return path)</text>
+
+  <rect x="730" y="95" width="150" height="70" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1.5"/>
+  <text x="805" y="123" text-anchor="middle" font-size="14" font-weight="bold" fill="#065f46">Target</text>
+  <text x="805" y="143" text-anchor="middle" font-size="11" fill="#047857">192.168.0.10:22 (sshd)</text>
+
+  <line x1="170" y1="120" x2="300" y2="120" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow3)"/>
+  <text x="235" y="107" text-anchor="middle" font-size="9" fill="#334155">dst=172.16.10.22:2222</text>
+
+  <line x1="570" y1="120" x2="730" y2="120" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow3)"/>
+  <text x="650" y="107" text-anchor="middle" font-size="9" fill="#334155">same conn, header rewritten</text>
+
+  <line x1="805" y1="165" x2="805" y2="255" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4,3"/>
+  <line x1="805" y1="255" x2="95" y2="255" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4,3"/>
+  <line x1="95" y1="255" x2="95" y2="165" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arrow3d)"/>
+  <text x="435" y="272" text-anchor="middle" font-size="10" fill="#64748b">return traffic — one continuous TCP connection end-to-end, rewritten again on the way back</text>
+
+  <text x="435" y="290" text-anchor="middle" font-size="10" fill="#7f1d1d">Kernel-level packet rewrite. Requires ip_forward=1 — closer to a real router than to netsh portproxy.</text>
+</svg>
