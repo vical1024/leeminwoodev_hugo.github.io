@@ -111,7 +111,7 @@ Mainly works in automotive industry
   
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Port Forwarding 101: `netsh portproxy` vs Linux Equivalents">
-  <meta name="twitter:description" content="# Port Forwarding 101: `netsh portproxy` vs Linux Equivalents 최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(`172.16.10.22`)과 보드망(`192.168.0.x`)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 `netsh interface portproxy`로 SSH 점프 포인트를 하나 만들었습니다. ```text &gt; netsh interface portproxy show all Listen on ipv4: Connect to ipv4: Address Port Address Port --------------- ---------- --------------- ---------- 172.16.10.22 2222 192.168.0.10 22 이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(172.16.10.22)의 2222 포트로만 SSH하면 연결된 보드(192.168.0.10:22)로 바로 들어갈 수 있게 만들 수 있었습니다. 172.16.10.22:2222로 들어온 트래픽을 192.168.0.10:22로 넘기는 룰입니다. portproxy 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.">
+  <meta name="twitter:description" content="임베디드 엔지니어쟁이들의 업에서 빼놓을 수 없는 건 실제 타겟 보드에서의 디버깅입니다. 호스트 환경에서 아무리 열심히 개발하고 테스트하더라도, 소프트웨어가 실제 하드웨어에서 제대로 동작하는지는 결국 타겟 보드에서 직접 확인할 수밖에 없습니다. 그 보드가 특정한 물리적 환경에 묶여 있을 때 - 제 경우에는 차량 환경이죠 - 일이 고달퍼지기 시작합니다. 차고나 주차장에 있는 차량에 설치되어 있는 보드를 그 환경에서 사용해야 한다면요. 차량 옆에 쪼그려 앉아서 보드를 디버깅하고, 코드를 수정하고, 다시 배포하고, 또 테스트하는 일은 보기보다 고됩니다. 여기서 게으름을 조금 피워보죠. 여분의 Windows laptop을 차량에 두고, 그 Laptop을 통해 제 Desk에서 보드에 원격으로 접근해 보기로 했습니다.">
 
 
 
@@ -119,7 +119,7 @@ Mainly works in automotive industry
   <meta property="og:url" content="https://blog.leeminwoo.dev/ko/post/2026-08-04-port-forwarding-101-netsh-portproxy-vs-linux-equivalents/">
   <meta property="og:site_name" content="Minwoo Lee">
   <meta property="og:title" content="Port Forwarding 101: `netsh portproxy` vs Linux Equivalents">
-  <meta property="og:description" content="# Port Forwarding 101: `netsh portproxy` vs Linux Equivalents 최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(`172.16.10.22`)과 보드망(`192.168.0.x`)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 `netsh interface portproxy`로 SSH 점프 포인트를 하나 만들었습니다. ```text &gt; netsh interface portproxy show all Listen on ipv4: Connect to ipv4: Address Port Address Port --------------- ---------- --------------- ---------- 172.16.10.22 2222 192.168.0.10 22 이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(172.16.10.22)의 2222 포트로만 SSH하면 연결된 보드(192.168.0.10:22)로 바로 들어갈 수 있게 만들 수 있었습니다. 172.16.10.22:2222로 들어온 트래픽을 192.168.0.10:22로 넘기는 룰입니다. portproxy 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.">
+  <meta property="og:description" content="임베디드 엔지니어쟁이들의 업에서 빼놓을 수 없는 건 실제 타겟 보드에서의 디버깅입니다. 호스트 환경에서 아무리 열심히 개발하고 테스트하더라도, 소프트웨어가 실제 하드웨어에서 제대로 동작하는지는 결국 타겟 보드에서 직접 확인할 수밖에 없습니다. 그 보드가 특정한 물리적 환경에 묶여 있을 때 - 제 경우에는 차량 환경이죠 - 일이 고달퍼지기 시작합니다. 차고나 주차장에 있는 차량에 설치되어 있는 보드를 그 환경에서 사용해야 한다면요. 차량 옆에 쪼그려 앉아서 보드를 디버깅하고, 코드를 수정하고, 다시 배포하고, 또 테스트하는 일은 보기보다 고됩니다. 여기서 게으름을 조금 피워보죠. 여분의 Windows laptop을 차량에 두고, 그 Laptop을 통해 제 Desk에서 보드에 원격으로 접근해 보기로 했습니다.">
   <meta property="og:locale" content="ko">
   <meta property="og:type" content="article">
     <meta property="article:section" content="post">
@@ -140,7 +140,7 @@ Mainly works in automotive industry
         "alternativeHeadline": "",
         "description": "
       
-        \u003cdiv class=\u0022highlight\u0022\u003e\u003cpre tabindex=\u00220\u0022 style=\u0022color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;\u0022\u003e\u003ccode class=\u0022language-markdown\u0022 data-lang=\u0022markdown\u0022\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e# Port Forwarding 101: \u0060netsh portproxy\u0060 vs Linux Equivalents\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(\u003cspan style=\u0022color:#e6db74\u0022\u003e\u0060172.16.10.22\u0060\u003c\/span\u003e)과 보드망(\u003cspan style=\u0022color:#e6db74\u0022\u003e\u0060192.168.0.x\u0060\u003c\/span\u003e)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 \u003cspan style=\u0022color:#e6db74\u0022\u003e\u0060netsh interface portproxy\u0060\u003c\/span\u003e로 SSH 점프 포인트를 하나 만들었습니다.\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\u0060\u0060\u0060text\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\u003cspan style=\u0022color:#66d9ef\u0022\u003e\u0026gt; \u003c\/span\u003e\u003cspan style=\u0022font-style:italic\u0022\u003enetsh interface portproxy show all\n\u003c\/span\u003e\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003eListen on ipv4:             Connect to ipv4:\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003eAddress         Port        Address         Port\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e--------------- ----------  --------------- ----------\n\u003c\/span\u003e\u003c\/span\u003e\u003cspan style=\u0022display:flex;\u0022\u003e\u003cspan\u003e172.16.10.22    2222        192.168.0.10    22\n\u003c\/span\u003e\u003c\/span\u003e\u003c\/code\u003e\u003c\/pre\u003e\u003c\/div\u003e\u003cp\u003e이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(\u003ccode\u003e172.16.10.22\u003c\/code\u003e)의 2222 포트로만 SSH하면 연결된 보드(\u003ccode\u003e192.168.0.10:22\u003c\/code\u003e)로 바로 들어갈 수 있게 만들 수 있었습니다. \u003ccode\u003e172.16.10.22:2222\u003c\/code\u003e로 들어온 트래픽을 \u003ccode\u003e192.168.0.10:22\u003c\/code\u003e로 넘기는 룰입니다. \u003ccode\u003eportproxy\u003c\/code\u003e 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.\u003c\/p\u003e
+        \u003cp\u003e임베디드 엔지니어쟁이들의 업에서 빼놓을 수 없는 건 실제 타겟 보드에서의 디버깅입니다. 호스트 환경에서 아무리 열심히 개발하고 테스트하더라도, 소프트웨어가 실제 하드웨어에서 제대로 동작하는지는 결국 타겟 보드에서 직접 확인할 수밖에 없습니다. 그 보드가 특정한 물리적 환경에 묶여 있을 때 - 제 경우에는 차량 환경이죠 - 일이 고달퍼지기 시작합니다. 차고나 주차장에 있는 차량에 설치되어 있는 보드를 그 환경에서 사용해야 한다면요. 차량 옆에 쪼그려 앉아서 보드를 디버깅하고, 코드를 수정하고, 다시 배포하고, 또 테스트하는 일은 보기보다 고됩니다. 여기서 게으름을 조금 피워보죠. 여분의 Windows laptop을 차량에 두고, 그 Laptop을 통해 제 Desk에서 보드에 원격으로 접근해 보기로 했습니다.\u003c\/p\u003e
 
 
       
@@ -191,7 +191,7 @@ Mainly works in automotive industry
 
     ,
         "url" : "https:\/\/blog.leeminwoo.dev\/ko\/post\/2026-08-04-port-forwarding-101-netsh-portproxy-vs-linux-equivalents\/",
-        "wordCount" : "786",
+        "wordCount" : "1769",
         "genre" : [ ],
         "keywords" : [ ]
     }
@@ -384,182 +384,362 @@ Mainly works in automotive industry
           </li>
           <li class="post__meta-item">
             <em class="fas fa-stopwatch post__meta-icon"></em>
-            <span class="post__meta-text">읽는 시간 4분</span>
+            <span class="post__meta-text">읽는 시간 9분</span>
           </li>
         </ul>
-      <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># Port Forwarding 101: `netsh portproxy` vs Linux Equivalents
+      <p>임베디드 엔지니어쟁이들의 업에서 빼놓을 수 없는 건 실제 타겟 보드에서의 디버깅입니다. 호스트 환경에서 아무리 열심히 개발하고 테스트하더라도, 소프트웨어가 실제 하드웨어에서 제대로 동작하는지는 결국 타겟 보드에서 직접 확인할 수밖에 없습니다. 그 보드가 특정한 물리적 환경에 묶여 있을 때 - 제 경우에는 차량 환경이죠 - 일이 고달퍼지기 시작합니다. 차고나 주차장에 있는 차량에 설치되어 있는 보드를 그 환경에서 사용해야 한다면요. 차량 옆에 쪼그려 앉아서 보드를 디버깅하고, 코드를 수정하고, 다시 배포하고, 또 테스트하는 일은 보기보다 고됩니다. 여기서 게으름을 조금 피워보죠. 여분의 Windows laptop을 차량에 두고, 그 Laptop을 통해 제 Desk에서 보드에 원격으로 접근해 보기로 했습니다.</p>
+<h2 id="제-windows-노트북은-두-네트워크-comnay-vpn-wifi172160ab와-board-ethernet192168xy에-동시에-연결되어-있었습니다">제 Windows 노트북은 두 네트워크 Comnay VPN Wifi(172.160.a.b)와 Board Ethernet(192.168.x.y)에 동시에 연결되어 있었습니다.</h2>
+<h1 id="1-ssh-jump-host-사용">1. SSH Jump Host 사용</h1>
+<p>쉽게 접근해봅시다. Windows laptop에 SSH로 접속한 다음, 그 shell에서 다시 타겟 보드로 SSH하면 됩니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># My current host</span>
+</span></span><span style="display:flex;"><span>ssh windows_account@172.160.a.b
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>최근 프로젝트에서 사용하는 보드를 원격으로 자리에서 편하게 디버깅하려고 여분 Windows 노트북을 보드와 연결해 두었습니다. Windows 노트북은 사내망(<span style="color:#e6db74">`172.16.10.22`</span>)과 보드망(<span style="color:#e6db74">`192.168.0.x`</span>)에 동시에 붙어 있는 구조였습니다. 다른 사람들도 쉽게 붙을 수 있게 <span style="color:#e6db74">`netsh interface portproxy`</span>로 SSH 점프 포인트를 하나 만들었습니다.
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>```text
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">&gt; </span><span style="font-style:italic">netsh interface portproxy show all
-</span></span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Listen on ipv4:             Connect to ipv4:
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Windows machine</span>
+</span></span><span style="display:flex;"><span>ssh board_account@192.168.x.y
+</span></span></code></pre></div><p>물론 매번 이렇게 두 번씩 접속할 필요는 없습니다. <code>ProxyJump</code>를 이용하면 Windows laptop을 jump host로 사용할 수 있습니다. 클라이언트의 <code>~/.ssh/config</code>에 다음과 같이 설정합니다.</p>
+<pre tabindex="0"><code class="language-sshconfig" data-lang="sshconfig">Host windows-jump
+    HostName 172.16.a.b
+    User windows_account
+
+Host target-board
+    HostName 192.168.x.y
+    User board_account
+    ProxyJump windows-jump
+</code></pre><p>이제 다음 명령만 실행하면 한 번에 보드에 다다를 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh target-board
+</span></span></code></pre></div><hr>
+<h1 id="2-ssh-tunnel로-특정-port-노출">2. SSH Tunnel로 특정 Port 노출</h1>
+<p>저 혼자만 이 환경을 사용한다면 SSH Jump Host만으로도 충분합니다. 문제는 다른 엔지니어들도 같은 보드를 사용해야 할 때였습니다. <code>ProxyJump</code>를 사용하려면 결국 각각의 사용자가 중간 Windows laptop에 인증을 거쳐 로그인 해야 합니다. Windows laptop이 공용이면 상관없지만 제 경우에는 제 업무용 Windows laptop을 임시로 차량에 가져다 논 거라서 옆 자리 동료가 보드를 살펴보고 싶다고 하니까 꽤나 난감해졌습니다. 저는 자리에서 원격으로 보고 동료는 직접 가라고 할 수는 없잖아요. 그리고 이미 Windows laptop에 물리적으로 연결된 보드의 Ethernet라인을 뻬고 다시 붙이고 다시 되돌려놓고. 그래서 제 Windows laptop 계정을 공유하지 않고 단순히 Windows laptop을 중간 매개체로만 이용하는 방식을 적용하기 시작했습니다.</p>
+<p>Windows에는 이미 OpenSSH client가 있었기 때문에 가장 먼저 SSH port forwarding을 이용해 보았습니다. Windows laptop에서 타겟 보드로 SSH session 하나를 열면서 local port forwarding을 설정합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>ssh -N `
+</span></span><span style="display:flex;"><span>    -L <span style="color:#ae81ff">172.16</span>.a.b:<span style="color:#ae81ff">2222</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">127.0</span>.0.<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">22</span> `
+</span></span><span style="display:flex;"><span>    root@192.168.x.y
+</span></span></code></pre></div><p><code>-N</code>은 remote shell을 실행하지 않고 SSH connection을 forwarding 용도로만 사용하겠다는 의미입니다. <code>-L 172.16.a.b:2222:127.0.0.1:22</code>은 Windows 노트북의 <code>172.16.a.b:2222</code>에서 connection을 받은 뒤, 이미 만들어진 SSH connection을 통해 remote 측의 <code>127.0.0.1:22</code>로 전달합니다. 이때 remote SSH server가 <code>192.168.x.y</code>의 타겟 보드이므로 결과적으로 구조는 다음과 같습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Other Engineer
+</span></span><span style="display:flex;"><span>      |
+</span></span><span style="display:flex;"><span>      | ssh root@172.16.x.y -p 2222
+</span></span><span style="display:flex;"><span>      v
+</span></span><span style="display:flex;"><span>Windows laptop
+</span></span><span style="display:flex;"><span>172.16.x.y:2222
+</span></span><span style="display:flex;"><span>      |
+</span></span><span style="display:flex;"><span>      | SSH tunnel
+</span></span><span style="display:flex;"><span>      v
+</span></span><span style="display:flex;"><span>Target board
+</span></span><span style="display:flex;"><span>192.168.x.y:22
+</span></span></code></pre></div><p>이제 사용자는 Windows 계정을 알 필요가 없습니다. 그냥 아래 명령어를 통해 한 번에 보드에 접근 가능합니다. SSH authentication도 Windows 계정이 아니라 최종적으로 타겟 보드의 <code>sshd</code>를 상대로 이루어집니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh board_account@172.16.a.b -p <span style="color:#ae81ff">2222</span>
+</span></span></code></pre></div><hr>
+<h1 id="3-netsh-interface-portproxy로-persistent-port-forwarding-구성">3. <code>netsh interface portproxy</code>로 Persistent Port Forwarding 구성</h1>
+<p>이 방법으로 첫 번째 문제는 해결됐습니다. 하지만 사용하다 보니 또 다른 불편함이 생깁니다. forwarding이 존재하려면  SSH session이 항상 살아 있어야 합니다. Laptop이 재부팅되거나 SSH process가 종료되면 tunnel도 사라집니다. 물론 Task Scheduler나 script 등을 이용해서 자동으로 session을 다시 만들 수도 있습니다. SSH session 자체를 background process나 scheduled task을 lifecycle형태로 관리하는 것도 가능합니다. 하지만 이건 배보다 배꼽이 커지고 있는 느낌이랄까요.</p>
+<p>방법은 조금 더 복잡해지지만 그림은 조금 더 쉽게 그려봅시다. 별도의 SSH session을 계속 띄워 두는 대신 Windows 자체에 <code>172.16.a.b:2222 -&gt; 192.168.x.y:22</code>라는 forwarding rule을 영구적인 network configuration으로 설정할 수 없을까요?</p>
+<p><code>netsh interface portproxy</code>는 Windows가 특정 IP와 TCP port에서 connection을 받은 뒤, 이를 다른 IP와 TCP port로 전달하도록 설정할 수 있는 기능입니다.</p>
+<p>제가 원하는 구성은 다음과 같았습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>172.16.10.22:2222
+</span></span><span style="display:flex;"><span>       |
+</span></span><span style="display:flex;"><span>       | TCP proxy
+</span></span><span style="display:flex;"><span>       v
+</span></span><span style="display:flex;"><span>192.168.0.10:22
+</span></span></code></pre></div><p>관리자 권한의 PowerShell이나 Command Prompt에서 다음과 같이 설정합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>netsh interface portproxy add v4tov4 `
+</span></span><span style="display:flex;"><span>    listenaddress=<span style="color:#ae81ff">172.16</span>.10.22 `
+</span></span><span style="display:flex;"><span>    listenport=<span style="color:#ae81ff">2222</span> `
+</span></span><span style="display:flex;"><span>    connectaddress=<span style="color:#ae81ff">192.168</span>.0.10 `
+</span></span><span style="display:flex;"><span>    connectport=<span style="color:#ae81ff">22</span>
+</span></span></code></pre></div><p>설정된 rule은 다음 명령으로 확인할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>netsh interface portproxy show all
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>Listen on ipv4<span style="color:#960050;background-color:#1e0010">:</span>             Connect to ipv4<span style="color:#960050;background-color:#1e0010">:</span>
 </span></span><span style="display:flex;"><span>Address         Port        Address         Port
 </span></span><span style="display:flex;"><span>--------------- ----------  --------------- ----------
-</span></span><span style="display:flex;"><span>172.16.10.22    2222        192.168.0.10    22
-</span></span></code></pre></div><p>이렇게 하면 저의 민간한 Windows 계정 정보나 SSH 키를 다른 사람들에게 나눠주지 않아도, 노트북 IP(<code>172.16.10.22</code>)의 2222 포트로만 SSH하면 연결된 보드(<code>192.168.0.10:22</code>)로 바로 들어갈 수 있게 만들 수 있었습니다. <code>172.16.10.22:2222</code>로 들어온 트래픽을 <code>192.168.0.10:22</code>로 넘기는 룰입니다. <code>portproxy</code> 룰만으로는 부족했고, 방화벽·라우팅 등 추가로 맞춰야 할 조건이 있었습니다. 그래서 내부 동작을 살펴보고, 회사 임베디드 보드(Linux)에서도 같은 셋업이 가능한지 확인했습니다.</p>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">172.16</span>.10.22    <span style="color:#ae81ff">2222</span>        <span style="color:#ae81ff">192.168</span>.0.10    <span style="color:#ae81ff">22</span>
+</span></span></code></pre></div><p>사용자는 역시 다음 명령어를 통해 한 번에 보드에 다다를 수 있습니다. SSH Tunnel과 똑같이 SSH authentication Windows 계정이 아니라 최종적으로 타겟 보드의 <code>sshd</code>를 상대로 이루어집니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh root@172.16.10.22 -p <span style="color:#ae81ff">2222</span>
+</span></span></code></pre></div><h2 id="firewall">Firewall</h2>
+<p>조금 더 살을 붙여보겠습니다. 제대로 위 기능을 이용하기 위해서는 Firewall설정을 해야 합니다.</p>
+<p>먼저 Windows Firewall에서 다른 machine이 TCP 2222에 접근할 수 있어야 합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>New-NetFirewallRule `
+</span></span><span style="display:flex;"><span>    -DisplayName <span style="color:#e6db74">&#34;Board SSH Port Proxy&#34;</span> `
+</span></span><span style="display:flex;"><span>    -Direction Inbound `
+</span></span><span style="display:flex;"><span>    -Protocol TCP `
+</span></span><span style="display:flex;"><span>    -LocalPort <span style="color:#ae81ff">2222</span> `
+</span></span><span style="display:flex;"><span>    -Action Allow
+</span></span></code></pre></div><p>실제 Company 환경이라면 모든 source에서 접근할 수 있도록 열기보다 source subnet을 제한하는 것이 더 적절할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>New-NetFirewallRule `
+</span></span><span style="display:flex;"><span>    -DisplayName <span style="color:#e6db74">&#34;Board SSH Port Proxy&#34;</span> `
+</span></span><span style="display:flex;"><span>    -Direction Inbound `
+</span></span><span style="display:flex;"><span>    -Protocol TCP `
+</span></span><span style="display:flex;"><span>    -LocalPort <span style="color:#ae81ff">2222</span> `
+</span></span><span style="display:flex;"><span>    -RemoteAddress <span style="color:#ae81ff">172.16</span>.0.<span style="color:#ae81ff">0</span>/<span style="color:#ae81ff">16</span> `
+</span></span><span style="display:flex;"><span>    -Action Allow
+</span></span></code></pre></div><p>처럼 범위를 제한할 수 있습니다.</p>
+<h2 id="windows에서-target까지의-connectivity">Windows에서 Target까지의 Connectivity</h2>
+<p>또 하나 당연하지만 중요한 조건은 Windows 노트북 자체가 타겟에 접근할 수 있어야 한다는 것입니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Windows laptop
+</span></span><span style="display:flex;"><span>172.16.10.22
+</span></span><span style="display:flex;"><span>      |
+</span></span><span style="display:flex;"><span>      | board-facing Ethernet
+</span></span><span style="display:flex;"><span>      v
+</span></span><span style="display:flex;"><span>192.168.0.10:22
+</span></span></code></pre></div><p>먼저 Windows에서 아래 명령어가 성공하는지 확인합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Test-NetConnection <span style="color:#ae81ff">192.168</span>.0.10 -Port <span style="color:#ae81ff">22</span>
+</span></span></code></pre></div><p>실패한다면 <code>portproxy</code>를 디버깅하기 전에 Ethernet interface와 routing부터 확인해야 합니다. 아래 명령어를 통해 Windows가 <code>192.168.0.10</code>으로 가는 traffic을 어느 interface로 보내는지 확인할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>route print
+</span></span></code></pre></div><h2 id="listen-상태-확인">Listen 상태 확인</h2>
+<p>설정 후 실제로 해당 port가 열려 있는지도 확인할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-NetTCPConnection -LocalPort <span style="color:#ae81ff">2222</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>or
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>netstat -ano | findstr <span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">2222</span>
+</span></span></code></pre></div><hr>
+<h1 id="4-netsh-portproxy는-실제로-무엇을-하는가">4. <code>netsh portproxy</code>는 실제로 무엇을 하는가?</h1>
+<p>netsh portproxy에 대해서 조금 더 Deep dive를 해보겠습니다. Linux에서 흔히 사용하는 DNAT를 아시는 분이라면  DNAT과의 비교가 직관적으로 와 닿을 것 같습니다.</p>
+<p>먼저 <code>portproxy</code>기능은 이름 그대로 이 기능은 일반적인 NAT forwarding과는 다릅니다. NAT rule이 아니라 특정 주소와 TCP port에서 listen하고 incoming TCP connection을 다른 endpoint로 forwarding하는 <strong>proxy rule</strong>로 동작합니다. 지원범위도 TCP로 제한적입니다.</p>
+<p>개념적으로는:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Client
+</span></span><span style="display:flex;"><span>   |
+</span></span><span style="display:flex;"><span>   | TCP
+</span></span><span style="display:flex;"><span>   v
+</span></span><span style="display:flex;"><span>+--------------+
+</span></span><span style="display:flex;"><span>| Windows Host |
+</span></span><span style="display:flex;"><span>| Portproxy    |
+</span></span><span style="display:flex;"><span>+--------------+
+</span></span><span style="display:flex;"><span>   |
+</span></span><span style="display:flex;"><span>   | TCP
+</span></span><span style="display:flex;"><span>   v
+</span></span><span style="display:flex;"><span>Target
+</span></span></code></pre></div><p>와 같이 이해하는 편이 좋습니다.</p>
+<p>제 환경에 대입하면:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Client
+</span></span><span style="display:flex;"><span>   |
+</span></span><span style="display:flex;"><span>   | TCP connection
+</span></span><span style="display:flex;"><span>   | 172.16.10.22:2222
+</span></span><span style="display:flex;"><span>   v
+</span></span><span style="display:flex;"><span>Windows laptop
+</span></span><span style="display:flex;"><span>   |
+</span></span><span style="display:flex;"><span>   | portproxy
+</span></span><span style="display:flex;"><span>   v
+</span></span><span style="display:flex;"><span>Target board
+</span></span><span style="display:flex;"><span>192.168.0.10:22
+</span></span></code></pre></div><p>입니다.</p>
+<p>여기서 중요한 것은 Windows 머신을 일반적인 IP router로 구성하는 것과는 다르다는 점입니다.</p>
+<p>제가 특정 TCP service 하나를 외부에 노출하고 싶었을 뿐이지:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>172.16.x.x network
+</span></span><span style="display:flex;"><span>        |
+</span></span><span style="display:flex;"><span>        | route every packet
+</span></span><span style="display:flex;"><span>        v
+</span></span><span style="display:flex;"><span>192.168.x.x network
+</span></span></code></pre></div><p>처럼 두 subnet 전체를 routing하려던 것은 아니었습니다.</p>
+<p>따라서 이 use case에서는 별도의 Layer-3 routing 환경을 구축하지 않고도 원하는 SSH port 하나만 선택적으로 proxy할 수 있었습니다.</p>
+<p>이 점이 <code>portproxy</code>를 선택한 가장 큰 이유였습니다.</p>
+<p>또한 <code>portproxy</code>는 UDP를 지원하지 않습니다. Microsoft 문서상 protocol로 지원되는 것은 TCP뿐입니다.</p>
+<p>따라서 이 방법은:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>SSH
+</span></span><span style="display:flex;"><span>HTTP
+</span></span><span style="display:flex;"><span>HTTPS
+</span></span><span style="display:flex;"><span>TCP debug server
+</span></span></code></pre></div><p>같은 TCP service를 노출하기에는 적합하지만 UDP 기반 service까지 일반적인 gateway처럼 forwarding하려는 용도에는 적합하지 않습니다.</p>
+<h2 id="rule-관리">Rule 관리</h2>
+<p>설정 확인:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>netsh interface portproxy show all
+</span></span></code></pre></div><p>Rule 삭제:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>netsh interface portproxy delete v4tov4 `
+</span></span><span style="display:flex;"><span>    listenaddress=<span style="color:#ae81ff">172.16</span>.10.22 `
+</span></span><span style="display:flex;"><span>    listenport=<span style="color:#ae81ff">2222</span>
+</span></span></code></pre></div><p>Destination을 변경하고 싶다면 기존 rule을 수정하거나 다시 등록할 수도 있습니다.</p>
+<p>이런 형태의 configuration이라는 점 역시 일시적인 SSH tunnel보다 제 use case에는 잘 맞았습니다.</p>
 <hr>
-<h2 id="1-netsh-portproxy가-실제로-하는-일">1. <code>netsh portproxy</code>가 실제로 하는 일</h2>
-<p>처음 이를 셋업하고 사용하고 있을때는 이게 커널 라우팅으로 동작하는 줄 으례 짐작했습니다. 그런데 막상 자세히 공부해 보니 라우팅이 아니라 user-mode L4 relay였습니다. 커널이 패킷을 고쳐서 넘기는 게 아니라, <code>iphlpsvc</code>(IP Helper) 서비스가 TCP 소켓 두 개를 열어두고 그 사이 바이트를 그대로 복사하는(pump) 방식이었습니다.
-동작 순서는 이렇습니다.</p>
-<ol>
-<li><code>iphlpsvc</code>가 <code>172.16.10.22:2222</code>에 리스닝 소켓을 bind합니다</li>
-<li>클라이언트가 접속하면 iphlpsvc가 <strong>새 소켓</strong>을 열어 <code>192.168.0.10:22</code>로 접속합니다</li>
-<li>두 소켓 사이 데이터를 그대로 복사합니다. 클라이언트 눈에는 연결 하나로 보이지만, 실제로는 서로 다른 TCP 연결 두 개입니다</li>
-</ol>
-<div class="mermaid">sequenceDiagram
-    participant C as Client
-    participant W as Windows Host<br/>172.16.10.22<br/>(iphlpsvc / netsh portproxy)
-    participant T as Target<br/>192.168.0.10:22 (sshd)
-
-    C->>W: TCP connect 172.16.10.22:2222
-    W->>T: new TCP connect 192.168.0.10:22
-    Note over W: two independent sockets,<br/>byte-copy relay in user space
-    C-->>T: application data flows through the relay
-</div>
-
-<p><img src="diagram-windows-portproxy.svg" alt="Windows netsh portproxy relay diagram"></p>
-<p>이 구조를 이해하고 나니 왜 처음에 안 됐는지도 보였습니다. 아래 항목들이 갖춰져 있어야 합니다.</p>
+<h1 id="5-windows에서-가능한-다른-방법들">5. Windows에서 가능한 다른 방법들</h1>
+<p><code>netsh portproxy</code>만이 Windows에서 가능한 방법은 아닙니다.</p>
+<p>몇 가지 다른 선택지도 검토할 수 있습니다.</p>
+<h2 id="ssh-jump-host">SSH Jump Host</h2>
+<p>첫 번째 방법은 처음 사용했던 <code>ProxyJump</code>입니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Client
+</span></span><span style="display:flex;"><span>   |
+</span></span><span style="display:flex;"><span>   | SSH authentication
+</span></span><span style="display:flex;"><span>   v
+</span></span><span style="display:flex;"><span>Windows
+</span></span><span style="display:flex;"><span>   |
+</span></span><span style="display:flex;"><span>   | SSH
+</span></span><span style="display:flex;"><span>   v
+</span></span><span style="display:flex;"><span>Target
+</span></span></code></pre></div><p>장점은 매우 단순하다는 것입니다.</p>
+<p>추가적인 network configuration도 거의 필요하지 않습니다.</p>
+<p>하지만 모든 사용자가 Windows 머신에 로그인할 수 있어야 한다는 문제가 있었습니다.</p>
+<p>공용 jump server라면 오히려 좋은 방법이지만, 개인 업무용 Windows laptop을 임시 gateway로 사용하는 제 상황에는 적합하지 않았습니다.</p>
+<hr>
+<h2 id="ssh-port-forwarding">SSH Port Forwarding</h2>
+<p>두 번째 방법은:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>ssh -N -L ...
+</span></span></code></pre></div><p>을 사용하는 방법입니다.</p>
+<p>이 방법 역시 매우 간단하고 추가 프로그램도 필요하지 않습니다.</p>
+<p>또한 forwarding traffic 자체가 SSH session 안을 통과하기 때문에 encryption이라는 장점도 있습니다.</p>
+<p>하지만 forwarding이 SSH session의 lifetime에 종속됩니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>SSH process 종료
+</span></span><span style="display:flex;"><span>       =
+</span></span><span style="display:flex;"><span>Tunnel 종료
+</span></span></code></pre></div><p>입니다.</p>
+<p>Task Scheduler 등을 이용하면 자동화할 수 있지만, 이 경우 결국 persistent SSH process와 reconnect logic을 관리하는 형태가 됩니다.</p>
+<p>간단한 임시 tunnel에는 매우 좋은 방식이지만, 차량에 laptop을 계속 놔두고 infrastructure처럼 사용하려는 목적에서는 <code>portproxy</code> 쪽이 더 단순했습니다.</p>
+<hr>
+<h2 id="winnat">WinNAT</h2>
+<p>Windows에는 실제 Network Address Translation을 구성할 수 있는 <code>NetNat</code> PowerShell module도 있습니다.</p>
+<p>예를 들어:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>New-NetNat
+</span></span></code></pre></div><p>으로 NAT instance를 만들 수 있고:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Add-NetNatStaticMapping
+</span></span></code></pre></div><p>으로 static inbound mapping을 추가할 수 있습니다.</p>
+<p>Microsoft는 <code>New-NetNat</code>을 packet header의 IP address와 port 정보를 변환하는 NAT object를 만드는 기능으로 설명하고 있으며, <code>Add-NetNatStaticMapping</code>은 external network의 incoming connection을 internal host로 mapping할 수 있습니다.</p>
+<p>개념적으로는 제가 처음 <code>portproxy</code>가 동작한다고 생각했던 방식에 더 가깝습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>External network
+</span></span><span style="display:flex;"><span>       |
+</span></span><span style="display:flex;"><span>       v
+</span></span><span style="display:flex;"><span>   Windows NAT
+</span></span><span style="display:flex;"><span>       |
+</span></span><span style="display:flex;"><span>       v
+</span></span><span style="display:flex;"><span>Internal network
+</span></span></code></pre></div><p>따라서 두 network 사이에서 Windows를 실제 NAT gateway처럼 운용해야 한다면 훨씬 적절한 도구가 될 수 있습니다.</p>
+<p>하지만 제 목적은:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>TCP 2222 하나
+</span></span><span style="display:flex;"><span>      -&gt;
+</span></span><span style="display:flex;"><span>Target TCP 22
+</span></span></code></pre></div><p>를 노출하는 것이 전부였습니다.</p>
+<p>이를 위해 별도의 NAT object와 internal network topology를 구성하는 것은 필요 이상으로 복잡했습니다.</p>
+<p>그래서 이번에는 사용하지 않았습니다.</p>
+<hr>
+<h2 id="internet-connection-sharing">Internet Connection Sharing</h2>
+<p>Windows의 Internet Connection Sharing, 즉 ICS를 사용하는 방법도 생각할 수 있습니다.</p>
+<p>하지만 ICS의 목적은 한 network connection을 다른 private network의 여러 device와 공유하는 것입니다.</p>
+<p>제가 원한 것은 network 전체를 공유하는 것이 아니라 특정 TCP service 하나만 정확하게 노출하는 것이었습니다.</p>
+<p>또한 ICS를 사용하면 Windows가 private-side network configuration에 더 적극적으로 관여하게 되기 때문에, 이미 정해진 IP configuration을 사용하는 임베디드 보드 환경에서는 오히려 불필요한 side effect가 생길 수 있습니다.</p>
+<p>따라서 이 use case에는 맞지 않았습니다.</p>
+<hr>
+<h2 id="rras">RRAS</h2>
+<p>Windows Server 환경이라면 Routing and Remote Access Service, 즉 RRAS도 선택지가 될 수 있습니다.</p>
+<p>RRAS는 Windows machine을 실제 router/VPN/NAT gateway로 운영하기 위한 훨씬 완전한 networking solution입니다.</p>
+<p>하지만 차량에 임시로 둔 Windows laptop 하나에서 SSH port 하나를 전달하기 위해 RRAS 수준의 routing infrastructure를 구성하는 것은 지나치게 무거운 해결책입니다.</p>
+<p>이 역시 제외했습니다.</p>
+<hr>
+<h2 id="별도의-tcp-relay-프로그램">별도의 TCP Relay 프로그램</h2>
+<p>또 다른 방법은 Windows용 TCP relay application을 설치하는 것입니다.</p>
+<p>예를 들어 별도의 proxy나 relay daemon이:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>listen :2222
+</span></span><span style="display:flex;"><span>     |
+</span></span><span style="display:flex;"><span>     v
+</span></span><span style="display:flex;"><span>connect 192.168.0.10:22
+</span></span></code></pre></div><p>를 수행하도록 만들 수 있습니다.</p>
+<p>직접 Python이나 C++로 간단한 TCP relay를 작성하는 것도 어렵지는 않습니다.</p>
+<p>하지만 Windows가 이미 같은 목적의 <code>portproxy</code> 기능을 제공하고 있는 상황에서 외부 binary나 별도의 application lifecycle을 추가할 이유가 없었습니다.</p>
+<p>그래서 이것도 제외했습니다.</p>
+<hr>
+<h1 id="6-결국-netsh-portproxy를-선택한-이유">6. 결국 <code>netsh portproxy</code>를 선택한 이유</h1>
+<p>제가 필요한 조건을 다시 정리하면 다음과 같았습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>1. Windows account를 다른 사람과 공유하고 싶지 않다.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>2. 사용자는 그냥:
+</span></span><span style="display:flex;"><span>   ssh root@172.16.10.22 -p 2222
+</span></span><span style="display:flex;"><span>   로 접속할 수 있어야 한다.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>3. 별도의 SSH tunnel session을 계속 유지하고 싶지 않다.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>4. Windows를 완전한 router/NAT gateway로 만들 필요는 없다.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>5. SSH라는 TCP service 하나만 forwarding하면 충분하다.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>6. 가능하면 Windows 기본 기능만 사용하고 싶다.
+</span></span></code></pre></div><p>이 조건에서는 <code>netsh portproxy</code>가 가장 단순했습니다.</p>
 <table>
   <thead>
       <tr>
-          <th>체크포인트</th>
-          <th>왜 필요한가</th>
+          <th>방법</th>
+          <th style="text-align: right">Windows 계정 필요</th>
+          <th style="text-align: right">별도 session/process</th>
+          <th style="text-align: right">Network 전체 routing</th>
+          <th>제 경우</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td><code>iphlpsvc</code> 서비스 실행 (<code>net start iphlpsvc</code>)</td>
-          <td><code>portproxy</code> 룰이 이 서비스에 종속돼 있습니다</td>
+          <td>SSH Jump Host</td>
+          <td style="text-align: right">필요</td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right">불필요</td>
+          <td>△</td>
       </tr>
       <tr>
-          <td>listen 주소(<code>172.16.10.22</code>)가 이 머신의 실제 NIC IP</td>
-          <td><code>bind()</code>는 로컬 인터페이스에만 걸립니다. 아니면 리스닝 자체가 실패합니다</td>
+          <td>SSH Tunnel</td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right"><strong>필요</strong></td>
+          <td style="text-align: right">불필요</td>
+          <td>△</td>
       </tr>
       <tr>
-          <td>방화벽 인바운드 허용 (TCP 2222, 올바른 프로파일)</td>
-          <td><code>New-NetFirewallRule -Direction Inbound -Protocol TCP -LocalPort 2222 -Action Allow</code></td>
+          <td><code>netsh portproxy</code></td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right">불필요</td>
+          <td><strong>✓</strong></td>
       </tr>
       <tr>
-          <td><code>192.168.0.10</code>으로 가는 라우팅</td>
-          <td>대상 서브넷에 물려있는 NIC나 라우트가 있어야 두 번째 소켓 연결이 성공합니다</td>
+          <td>WinNAT</td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right">NAT 구성 필요</td>
+          <td>과함</td>
+      </tr>
+      <tr>
+          <td>ICS</td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right">Windows가 network 공유 구성</td>
+          <td style="text-align: right">Network 단위</td>
+          <td>부적합</td>
+      </tr>
+      <tr>
+          <td>RRAS</td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right">Service</td>
+          <td style="text-align: right">Router 구성</td>
+          <td>지나치게 과함</td>
+      </tr>
+      <tr>
+          <td>별도 TCP relay</td>
+          <td style="text-align: right">불필요</td>
+          <td style="text-align: right"><strong>별도 process 필요</strong></td>
+          <td style="text-align: right">불필요</td>
+          <td>불필요</td>
       </tr>
   </tbody>
 </table>
-<p><code>IPEnableRouter</code>(커널 라우팅 플래그)는 건드릴 필요가 없었습니다. <code>portproxy</code>는 라우터가 아니라 소켓 릴레이 프록시이기 때문입니다.</p>
-<hr>
-<h2 id="2-linux에서도-되는지-확인--방식-a-socat-같은-개념의-user-space-relay">2. Linux에서도 되는지 확인 — 방식 A: <code>socat</code> (같은 개념의 user-space relay)</h2>
-<p><code>netsh portproxy</code>와 가장 가까운 건 <code>socat</code>이었습니다. 커널 포워딩이나 iptables 없이, 프로세스 하나가 소켓 두 개를 릴레이해줍니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>socat TCP-LISTEN:2222,bind<span style="color:#f92672">=</span>172.16.10.22,fork,reuseaddr TCP:192.168.0.10:22
-</span></span></code></pre></div><div class="mermaid">sequenceDiagram
-    participant C as Client
-    participant L as Linux Host<br/>172.16.10.22<br/>(socat process)
-    participant T as Target<br/>192.168.0.10:22 (sshd)
-
-    C->>L: TCP connect 172.16.10.22:2222
-    L->>T: new TCP connect 192.168.0.10:22
-    Note over L: same relay concept as netsh portproxy —<br/>no ip_forward, no iptables needed
-    C-->>T: application data flows through the relay
+<p>결국 제가 필요했던 것은 router가 아니었습니다.</p>
+<p>단순히:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>172.16.10.22:2222
+</span></span><span style="display:flex;"><span>        |
+</span></span><span style="display:flex;"><span>        v
+</span></span><span style="display:flex;"><span>192.168.0.10:22
+</span></span></code></pre></div><p>라는 TCP path 하나였습니다.</p>
+<p><code>ProxyJump</code>에서 시작해 SSH tunnel을 거쳐 <code>portproxy</code>까지 오면서 같은 결과를 만드는 방법이 여러 가지라는 것을 확인할 수 있었습니다.</p>
+<p>그리고 각각의 방식이 해결하는 문제도 조금씩 달랐습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>ProxyJump
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>&#34;중간 머신에 어떻게 로그인할 것인가?&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SSH Tunnel
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>&#34;특정 TCP connection을 어떻게 안전하게 전달할 것인가?&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>portproxy
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>&#34;Windows에 특정 TCP forwarding rule을 어떻게 지속적으로 둘 것인가?&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>WinNAT / RRAS
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>&#34;Windows를 어떻게 실제 network gateway로 만들 것인가?&#34;
+</span></span></code></pre></div><p>제 경우에는 세 번째 문제를 풀고 있었기 때문에 <code>netsh portproxy</code>가 가장 적절했습니다.</p>
+<p>처음 시작은 단순히 Garage에 있는 차량 옆에 계속 쪼그려 앉아 있기 싫다는 것이었습니다.</p>
+<p>하지만 이 작은 불편함을 해결하면서 SSH jump host, SSH tunneling, TCP proxy, NAT가 서로 어디에서 비슷하고 어디에서 다른지도 다시 정리할 수 있었습니다.</p>
+<p>그리고 가장 중요한 목적도 달성했습니다.</p>
+<p>이제 차량에 붙어 있는 타겟 보드를 Garage에 내려가지 않고 제 Desk에서 바로 디버깅할 수 있게 되었습니다.</p>
 </div>
-
-<p><img src="diagram-linux-socat.svg" alt="Linux socat relay diagram"></p>
-<p>S32G274A 같은 임베디드 리눅스 보드에서 상시로 띄워야 한다면 systemd unit 하나만 만들면 됐습니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># /etc/systemd/system/ssh-portproxy.service</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[Unit]</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Description</span><span style="color:#f92672">=</span><span style="color:#e6db74">SSH port relay 172.16.10.22:2222 -&gt; 192.168.0.10:22</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">After</span><span style="color:#f92672">=</span><span style="color:#e6db74">network-online.target</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Wants</span><span style="color:#f92672">=</span><span style="color:#e6db74">network-online.target</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[Service]</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ExecStart</span><span style="color:#f92672">=</span><span style="color:#e6db74">/usr/bin/socat TCP-LISTEN:2222,bind=172.16.10.22,fork,reuseaddr TCP:192.168.0.10:22</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Restart</span><span style="color:#f92672">=</span><span style="color:#e6db74">on-failure</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[Install]</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">WantedBy</span><span style="color:#f92672">=</span><span style="color:#e6db74">multi-user.target</span>
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>systemctl daemon-reload
-</span></span><span style="display:flex;"><span>systemctl enable --now ssh-portproxy
-</span></span></code></pre></div><p><code>ssh -L</code>/<code>-R</code> 포트포워딩도 같은 계열(user-space relay)이지만, SSH 세션이 끊기면 같이 죽습니다. 상시 서비스라면 <code>socat</code> + systemd가 더 맞았습니다.</p>
-<hr>
-<h2 id="3-linux-방식-b-iptablesnftables-dnat-커널-레벨-포워딩">3. Linux 방식 B: <code>iptables</code>/<code>nftables</code> DNAT (커널 레벨 포워딩)</h2>
-<p>추가로 확인한 방식인데, <code>netsh portproxy</code>보다는 실제 NAT 라우터에 가까웠습니다. 새 소켓을 만드는 게 아니라 커널이 패킷의 목적지 주소/포트를 그 자리에서 고쳐서(rewrite) 그대로 넘깁니다. 클라이언트와 타겟 사이가 하나의 연속된 TCP 연결이라는 점이 앞의 방식과 가장 큰 차이였습니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 커널 포워딩 활성화 (필수)</span>
-</span></span><span style="display:flex;"><span>sysctl -w net.ipv4.ip_forward<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># PREROUTING: 목적지를 실제 타겟으로 재작성</span>
-</span></span><span style="display:flex;"><span>iptables -t nat -A PREROUTING -p tcp -d 172.16.10.22 --dport <span style="color:#ae81ff">2222</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>  -j DNAT --to-destination 192.168.0.10:22
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># FORWARD: 재작성된 패킷이 지나가도록 허용</span>
-</span></span><span style="display:flex;"><span>iptables -A FORWARD -p tcp -d 192.168.0.10 --dport <span style="color:#ae81ff">22</span> -j ACCEPT
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># POSTROUTING: 리턴 트래픽이 제대로 돌아오게 하려면 (라우팅 구조에 따라 필요)</span>
-</span></span><span style="display:flex;"><span>iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.10 --dport <span style="color:#ae81ff">22</span> -j MASQUERADE
-</span></span></code></pre></div><div class="mermaid">flowchart LR
-    C[Client] -->|"dst=172.16.10.22:2222"| P["PREROUTING / DNAT<br/>dst → 192.168.0.10:22"]
-    P --> F["FORWARD chain<br/>net.ipv4.ip_forward=1"]
-    F --> M["POSTROUTING / MASQUERADE<br/>(조건부)"]
-    M -->|"same conn, header rewritten"| T[Target 192.168.0.10:22]
-    T -.->|"return traffic, rewritten again"| C
-</div>
-
-<p><img src="diagram-linux-iptables-dnat.svg" alt="Linux iptables DNAT diagram"></p>
-<p><code>MASQUERADE</code>는 매번 필요하진 않았습니다. 타겟(<code>192.168.0.10</code>)이 리턴 패킷을 다시 이 라우터로 보낼 수 있는 구조(예: 기본 게이트웨이가 이 라우터)라면 생략해도 됩니다. 확실하지 않으면 넣어 두는 편이 안전했습니다.</p>
-<hr>
-<h2 id="4-한눈에-비교">4. 한눈에 비교</h2>
-<table>
-  <thead>
-      <tr>
-          <th></th>
-          <th>netsh portproxy (Windows)</th>
-          <th>socat (Linux)</th>
-          <th>iptables DNAT (Linux)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>계층</td>
-          <td>User-space, L4 소켓 릴레이</td>
-          <td>User-space, L4 소켓 릴레이</td>
-          <td>커널, 패킷 레벨 NAT</td>
-      </tr>
-      <tr>
-          <td>TCP 연결 개수</td>
-          <td>2개 (독립)</td>
-          <td>2개 (독립)</td>
-          <td>1개 (헤더만 재작성)</td>
-      </tr>
-      <tr>
-          <td><code>ip_forward</code> 필요?</td>
-          <td>불필요</td>
-          <td>불필요</td>
-          <td><strong>필요</strong></td>
-      </tr>
-      <tr>
-          <td>리스닝 IP 요건</td>
-          <td>로컬 NIC에 bind된 실제 IP</td>
-          <td>로컬 NIC에 bind된 실제 IP</td>
-          <td>없음 (패킷 가로채기라 bind 불필요)</td>
-      </tr>
-      <tr>
-          <td>적합한 상황</td>
-          <td>단일 서비스 점프/릴레이</td>
-          <td>단일 서비스 점프/릴레이, 데몬화 쉬움</td>
-          <td>여러 포트/서비스를 라우터처럼 통째로 포워딩</td>
-      </tr>
-  </tbody>
-</table>
-<hr>
-<h2 id="5-트러블슈팅-체크리스트">5. 트러블슈팅 체크리스트</h2>
-<p>작업하면서 안 될 때마다 아래 순서대로 확인했습니다.</p>
-<ol>
-<li>리스닝이 실제로 떠 있는지 — <code>netstat -an | findstr 2222</code> 또는 <code>Get-NetTCPConnection -LocalPort 2222</code> (Windows) / <code>ss -tlnp | grep 2222</code> (Linux)</li>
-<li>방화벽이 해당 포트/프로파일을 막고 있는지</li>
-<li>릴레이 호스트에서 타겟으로 라우팅이 되는지 — <code>ping 192.168.0.10</code>, <code>route print</code> / <code>ip route</code></li>
-<li>(iptables DNAT만) <code>net.ipv4.ip_forward</code>가 1인지, 리턴 경로에 <code>MASQUERADE</code>가 필요한 구조인지</li>
-<li>클라이언트 쪽에서 <code>Test-NetConnection 172.16.10.22 -Port 2222</code> 또는 <code>nc -zv 172.16.10.22 2222</code>로 최종 확인</li>
-</ol>
-<pre tabindex="0"><code></code></pre></div>
     <div class="post__footer">
       
 
